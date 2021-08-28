@@ -24,7 +24,6 @@ namespace TestConsoleApp
 
     class Program
     {
-
         public ListNode ReverseList(ListNode head)
         {
             if (head == null)
@@ -48,8 +47,6 @@ namespace TestConsoleApp
             // node in every recursion
             return newHeadNode;
         }
-
-
         static int CompareString(string Str1, string Str2)
         {
 
@@ -96,18 +93,10 @@ namespace TestConsoleApp
                         break;
 
                     }
-
-
                 }
-
             }
             return ar;
-
-
-
         }
-
-
         public static  string abInteger(int A, int B)
         {
             // write your code in C# 6.0 with .NET 4.5 (Mono)
@@ -134,7 +123,6 @@ namespace TestConsoleApp
                 nBigger = B;
                 nSmaller = A;
             }
-
             for (int i = 0; i < difference;)
             {
 
@@ -156,20 +144,15 @@ namespace TestConsoleApp
                 }
 
             }
-
             var sum = nSmaller + nBigger;
-
             for (int i = 0; i < sum;)
             {
-
                 if (isBigger)
                 {
                     if (result.Length > 2)
                     { 
                     
                     }
-
-
                     if ((nBigger > 0) && ((result.Length> 2) || (result.Substring(result.Length-2) != Bigger + Bigger)))
                     { 
                         result = result + Bigger;
@@ -179,7 +162,6 @@ namespace TestConsoleApp
                 }
                     isBigger = false;
                 }
-
                 else
                 {
                     if ((nSmaller > 0) && ((result.Length > 2) || (result.Substring(result.Length - 2) != Smaller + Smaller)))
@@ -190,86 +172,65 @@ namespace TestConsoleApp
                     }
                     isBigger = true;
                 }
-
             }
 
             return result;
-
-
-
-
-
-
         }
         static void Main(string[] args)
         {
 
+            int[][] jagged_arr =
+  {
+    new int[] {1, 2, 3, 4,7,8},
+    new int[] {1, 2, 3, 4,7,8},
+    new int[] {1, 2, 3, 4,7,8},
+    new int[] {1, 2, 3, 4,7,8},
+    new int[] {1, 2, 3, 4,7,8},
+    new int[] {1, 2, 3, 4,7,8}
+};
+
+
+            int n1 = hourglassSum(jagged_arr);
             int[] staticIntArray12 = new int[7] { 200, -20, -20, -20, -20, -20, -20 };
             string[] staticIntArray13 = new string[7] { "2020-01-01", "2020-02-01", "2020-02-11", "2020-02-05", "2020-02-05", "2020-02-05", "2020-02-05" };
-
             solutionwitdDict(staticIntArray12, staticIntArray13);
-
             abInteger(3,3);
-
             //int[] staticIntArray12 = new int[3] { 3,2,4};
-
             TwoSum(staticIntArray12, 6);
-
             // TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
-
             IDictionary<int, int> numberNames = new Dictionary<int, int>();
             numberNames.Add(0, 2); //adding a key/value using the Add() method
             numberNames.Add(1, 7);
             numberNames.Add(2, 9);
-
             int result43;
-
             if (numberNames.TryGetValue(0, out result43))
             {
                 Console.WriteLine(result43);
             }
             int[] intArray;
             intArray = new int[5];
-
             //int[] intArray;
             //intArray = new int[100];
             #region code
-
             int[] staticIntArray = new int[3] { 1, 3, 5 };
-
             int[,] numbers = new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             string[,] names = new string[2, 2] { { "Rosy", "Amy" }, { "Peter", "Albert" } };
-
             //int[,] numbers = new int[,] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
             //string[,] names = new string[,] { { "Rosy", "Amy" }, { "Peter", "Albert" } };
-
-
-
-            
-
             var str23 = twoStrings("hi", "hello");
             Console.WriteLine(str23);
-
             int n = 100;   //Convert.ToInt32(Console.ReadLine());
-
             int[] ar = new int[100] { 50, 49, 38, 49, 78, 36, 25, 96, 10, 67, 78, 58, 98, 8, 53, 1, 4, 7, 29, 6, 59, 93, 74, 3, 67, 47, 12, 85, 84, 40, 81, 85, 89, 70, 33, 66, 6, 9, 13, 67, 75, 42, 24, 73, 49, 28, 25, 5, 86, 53, 10, 44, 45, 35, 47, 11, 81, 10, 47, 16, 49, 79, 52, 89, 100, 36, 6, 57, 96, 18, 23, 71, 11, 99, 95, 12, 78, 19, 16, 64, 23, 77, 7, 19, 11, 5, 81, 43, 14, 27, 11, 63, 57, 62, 3, 56, 50, 9, 13, 45 }; // Array.ConvertAll(Console.ReadLine().Split(' '), arTemp => Convert.ToInt32(arTemp))
-
             int result = sockMerchant(n, ar);
-
             Console.WriteLine(result);
             Console.ReadLine();
 
             //  textWriter.WriteLine(result);
-
             ///// textWriter.Flush();
             // textWriter.Close();
-
-
             Random rnd = new Random();
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-
-          
             HighlyOptimizedThreadSafeDuplicateCheckService service = new HighlyOptimizedThreadSafeDuplicateCheckService();
             //for (int i = 0; i < 1000000; i++)
             //{
@@ -277,50 +238,36 @@ namespace TestConsoleApp
             //}
 
             Thread[] threads = new Thread[20];
-
             for (int i = 0; i < threads.Length; i++)
             {
                 threads[i] = new Thread(service.IsThisTheFirstTimeWeHaveSeenTest);
             }
-
             foreach (Thread thread in threads)
             {
                 thread.Start();
             }
-
             foreach (Thread thread in threads)
             {
                 thread.Join();
             }
-
-
             stopWatch.Stop();
             // Get the elapsed time as a TimeSpan value.
             TimeSpan ts = stopWatch.Elapsed;
-
             // Format and display the TimeSpan value.
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds / 10);
             Console.WriteLine("RunTime " + elapsedTime);
-
             Console.ReadLine();
-
             result = CompareString("tretr", "tr");
             Console.WriteLine(result);
             Console.ReadLine();
-
-
             Console.WriteLine("Hello World!");
-
             var bytes = FileToByteArray("D:/TimeSolv/mmm.docx");
-
             var str = System.Text.Encoding.Default.GetString(bytes);
-
             int a = 0;
             #endregion
         }
-
         public static byte[] FileToByteArray(string fileName)
         {
             byte[] fileData = null;
@@ -332,16 +279,9 @@ namespace TestConsoleApp
             }
             return fileData;
         }
-
-
         public static int solutionwitdDict(int[] A, string[] D)
         {
-            // write your code in C# 6.0 with .NET 4.5 (Mono)
-
-            // write your code in Java SE 8
             int totalBalace = 0;
-            
-           
             string currentMonth = "";
             var freeMonth = new int[12];
             int index = 0;
@@ -358,7 +298,7 @@ namespace TestConsoleApp
 
                     currentMonth = arrD[1].ToString();
             
-                            index = Int32.Parse(currentMonth);
+                        index = Int32.Parse(currentMonth);
                         if (dict.ContainsKey(index))
                         {
                             var dictvalue = "";
@@ -375,40 +315,22 @@ namespace TestConsoleApp
                         else
                         {
                         dict.Add(index, "1" + "," + A[i]);
-                        }
-                    
+                        }    
                 }
-
             }
 
             foreach (KeyValuePair<int, string> entry in dict)
             {
-
                 var arrValue = entry.Value.Split(',');
                 if ((Int32.Parse(arrValue[0]) >= 3) && (Int32.Parse(arrValue[1]) <= -100))
                 {
                     freeMonthCounter = freeMonthCounter - 1;
                 }
-
-
-            
             }
 
-
-
-
-
-
-
-
-
-                totalBalace = totalBalace - (5 * freeMonthCounter);
-
+            totalBalace = totalBalace - (5 * freeMonthCounter);
             return totalBalace;
-
         }
-
-
         public static int solution123(int[] A, string[] D)
         {
             // write your code in C# 6.0 with .NET 4.5 (Mono)
@@ -466,7 +388,25 @@ namespace TestConsoleApp
 
         }
 
+        public static int hourglassSum(int[][] arr)
+        {
+            int maxSum = -100000;
+            int currentSum = 0;
 
+            for (int j = 0; j < arr.Length - 2; j++)
+            {
+                for (int k = 0; k < arr[j].Length - 2; k++)
+                {
+                    currentSum = arr[j][k] + arr[j][k+1] + arr[j][k+2] + arr[j + 1][k + 1] + arr[j+2][k] + arr[j + 2][k + 1] + arr[j + 2][k + 2]; //+ arr[k+1][l] + arr[k + 2] + 
+                    if (currentSum > maxSum)
+                    {
+                        maxSum = currentSum;
+                    }
+                }
+            }
+            
+            return maxSum; 
+        }
 
         // Complete the sockMerchant function below.
         static int sockMerchant(int n, int[] ar)
