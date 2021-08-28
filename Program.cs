@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using quick_code_test;
@@ -201,82 +201,19 @@ namespace TestConsoleApp
 
 
         }
-
-        public static int solution123(int[] A, string[] D)
-        {
-            // write your code in C# 6.0 with .NET 4.5 (Mono)
-
-            // write your code in Java SE 8
-            int totalBalace = 0;
-            int currentMonthCounter = 1;
-            int currentMonthTransactions = 0;
-            string currentMonth = "";
-            var freeMonth = new int[12];
-            int index = 0;
-            int freeMonthCounter = 12;
-
-
-
-            for (int i = 0; i < A.Length; i++)
-            {
-                totalBalace = totalBalace + A[i];
-                if ((i > 0) && (A[i] < 0))
-                {
-                    var arrD = D[i].Split('-');
-
-                    currentMonth = arrD[1].ToString();
-                    var arrD1 = D[i - 1].Split('-');
-                    var previousMonth = arrD1[1].ToString();
-
-
-                    if ((currentMonth == previousMonth))
-                    {
-                        currentMonthTransactions = currentMonthTransactions + A[i];
-                        currentMonthCounter = currentMonthCounter + 1;
-                        if ((currentMonthCounter >= 3) && (currentMonthTransactions <= -100))
-                        {
-                            index = Int32.Parse(currentMonth);
-                            freeMonth[index] = 1;
-                        }
-                    }
-                    else
-                    {
-                        currentMonthTransactions = A[i];
-
-                    }
-                }
-
-            }
-
-            for (int i = 0; i < freeMonth.Length; i++)
-            {
-                if (freeMonth[i] > 0)
-                    freeMonthCounter = freeMonthCounter - 1;
-            }
-                totalBalace = totalBalace - (5 * freeMonthCounter);
-
-            return totalBalace;
-
-        }
-
-
         static void Main(string[] args)
         {
 
             int[] staticIntArray12 = new int[7] { 200, -20, -20, -20, -20, -20, -20 };
             string[] staticIntArray13 = new string[7] { "2020-01-01", "2020-02-01", "2020-02-11", "2020-02-05", "2020-02-05", "2020-02-05", "2020-02-05" };
 
-
-            solution123(staticIntArray12, staticIntArray13);
-
-
+            solutionwitdDict(staticIntArray12, staticIntArray13);
 
             abInteger(3,3);
 
             //int[] staticIntArray12 = new int[3] { 3,2,4};
 
             TwoSum(staticIntArray12, 6);
-
 
             // TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
 
@@ -291,13 +228,12 @@ namespace TestConsoleApp
             {
                 Console.WriteLine(result43);
             }
-
-
             int[] intArray;
             intArray = new int[5];
 
             //int[] intArray;
             //intArray = new int[100];
+            #region code
 
             int[] staticIntArray = new int[3] { 1, 3, 5 };
 
@@ -382,8 +318,9 @@ namespace TestConsoleApp
             var str = System.Text.Encoding.Default.GetString(bytes);
 
             int a = 0;
+            #endregion
         }
-      
+
         public static byte[] FileToByteArray(string fileName)
         {
             byte[] fileData = null;
@@ -395,6 +332,141 @@ namespace TestConsoleApp
             }
             return fileData;
         }
+
+
+        public static int solutionwitdDict(int[] A, string[] D)
+        {
+            // write your code in C# 6.0 with .NET 4.5 (Mono)
+
+            // write your code in Java SE 8
+            int totalBalace = 0;
+            
+           
+            string currentMonth = "";
+            var freeMonth = new int[12];
+            int index = 0;
+            int freeMonthCounter = 12;
+
+            IDictionary<int, string> dict = new Dictionary<int, string>();
+
+            for (int i = 0; i < A.Length; i++)
+            {
+                totalBalace = totalBalace + A[i];
+                if (A[i] < 0)
+                {
+                    var arrD = D[i].Split('-');
+
+                    currentMonth = arrD[1].ToString();
+            
+                            index = Int32.Parse(currentMonth);
+                        if (dict.ContainsKey(index))
+                        {
+                            var dictvalue = "";
+                            if (dict.TryGetValue(index, out dictvalue))
+                            {
+                                var arrdictvalue = dictvalue.Split(',');
+
+                                var counter =  Int32.Parse(arrdictvalue[0]) + 1;
+                                var sum = Int32.Parse(arrdictvalue[1]) + A[i];
+                                dict.Remove(index);
+                                dict.Add(index, counter + "," + sum);
+                            }
+                        }
+                        else
+                        {
+                        dict.Add(index, "1" + "," + A[i]);
+                        }
+                    
+                }
+
+            }
+
+            foreach (KeyValuePair<int, string> entry in dict)
+            {
+
+                var arrValue = entry.Value.Split(',');
+                if ((Int32.Parse(arrValue[0]) >= 3) && (Int32.Parse(arrValue[1]) <= -100))
+                {
+                    freeMonthCounter = freeMonthCounter - 1;
+                }
+
+
+            
+            }
+
+
+
+
+
+
+
+
+
+                totalBalace = totalBalace - (5 * freeMonthCounter);
+
+            return totalBalace;
+
+        }
+
+
+        public static int solution123(int[] A, string[] D)
+        {
+            // write your code in C# 6.0 with .NET 4.5 (Mono)
+
+            // write your code in Java SE 8
+            int totalBalace = 0;
+            int currentMonthCounter = 1;
+            int currentMonthTransactions = 0;
+            string currentMonth = "";
+            var freeMonth = new int[12];
+            int index = 0;
+            int freeMonthCounter = 12;
+
+
+
+            for (int i = 0; i < A.Length; i++)
+            {
+                totalBalace = totalBalace + A[i];
+                if ((i > 0) && (A[i] < 0))
+                {
+                    var arrD = D[i].Split('-');
+
+                    currentMonth = arrD[1].ToString();
+                    var arrD1 = D[i - 1].Split('-');
+                    var previousMonth = arrD1[1].ToString();
+
+
+                    if ((currentMonth == previousMonth))
+                    {
+                        currentMonthTransactions = currentMonthTransactions + A[i];
+                        currentMonthCounter = currentMonthCounter + 1;
+                        if ((currentMonthCounter >= 3) && (currentMonthTransactions <= -100))
+                        {
+                            index = Int32.Parse(currentMonth);
+                            freeMonth[index] = 1;
+                        }
+                    }
+                    else
+                    {
+                        currentMonthTransactions = A[i];
+
+                    }
+                }
+
+            }
+
+            for (int i = 0; i < freeMonth.Length; i++)
+            {
+                if (freeMonth[i] > 0)
+                    freeMonthCounter = freeMonthCounter - 1;
+            }
+            totalBalace = totalBalace - (5 * freeMonthCounter);
+
+            return totalBalace;
+
+        }
+
+
 
         // Complete the sockMerchant function below.
         static int sockMerchant(int n, int[] ar)
@@ -521,8 +593,10 @@ namespace TestConsoleApp
                     return "Yes";
                 }
 
-            }
+                //}
 
+                return "No";
+            }
             return "No";
 
         }
