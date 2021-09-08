@@ -69,6 +69,51 @@ namespace TestConsoleApp
         
         }
 
+        public static int CalPiont(string[] ops)
+        {
+            int totalScore = 0;
+            ArrayList arList = new ArrayList();
+
+           
+
+            for (int i = 0; i < ops.Length; i++)
+            {
+                int variable = 0;
+                int.TryParse(ops[i], out variable);
+
+                if (ops[i] == "D")
+                {
+
+
+                    arList.Add(2 * (int.Parse(arList[arList.Count - 1].ToString())));
+                }
+                else if (ops[i] == "C")
+                {
+                    arList.RemoveAt(arList.Count -1);
+                }
+                else if (ops[i] == "+")
+                {
+                    arList.Add( int.Parse(arList[arList.Count-1].ToString()) + int.Parse(arList[arList.Count - 2].ToString())) ;
+                }
+                else {
+                    arList.Add(variable);
+                }
+
+
+
+
+            }
+
+            foreach (var item in arList)
+            {
+                totalScore = totalScore + int.Parse(item.ToString());
+            }
+
+            return totalScore;
+        
+        } 
+
+
         public static int[] TwoSum(int[] nums, int target)
         {
 
@@ -96,6 +141,43 @@ namespace TestConsoleApp
                 }
             }
             return ar;
+        }
+
+        public static int CounElements(int[] arr)
+        {
+
+            Array.Sort(arr);
+            int totalCount = 0;
+            int duplicateCount = 1;
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (i > 0)
+                {
+
+                    if (arr[i] == arr[i - 1])
+                    {
+                        duplicateCount++;
+                        continue;
+                    }
+                    else {
+                        duplicateCount = 1;
+                    }
+
+                }
+
+                if (i < arr.Length - 1)
+                {
+                    if (arr[i] == arr[i+1] - 1)
+                    {
+                        totalCount = totalCount + duplicateCount;
+                    }
+                }
+
+            }
+
+            return totalCount;
+        
         }
         public static  string abInteger(int A, int B)
         {
@@ -179,6 +261,17 @@ namespace TestConsoleApp
         static void Main(string[] args)
         {
 
+            int[] intstaticIntArray1245 = new int[3] { 1,2,3};
+            int grtr = CounElements(intstaticIntArray1245);
+
+
+
+            string[] staticIntArray1245 = new string[5] { "5", "2", "C", "D", "+" };
+
+
+            string[] staticIntArray12456 = new string[8] { "5", "-2", "4", "C", "D", "9", "+", "+" };
+
+            CalPiont(staticIntArray12456);
 
             SieveOfEratosthenes(50);
 
@@ -196,7 +289,17 @@ namespace TestConsoleApp
 
 
 
-      
+            int[][] jaggedArray = new int[5][];
+            jaggedArray[0] = new int[3];
+            jaggedArray[1] = new int[5];
+            jaggedArray[2] = new int[2];
+            jaggedArray[3] = new int[8];
+            jaggedArray[4] = new int[10];
+            jaggedArray[0] = new int[] { 3, 5, 7, };
+            jaggedArray[1] = new int[] { 1, 0, 2, 4, 6 };
+            jaggedArray[2] = new int[] { 1, 6 };
+            jaggedArray[3] = new int[] { 1, 0, 2, 4, 6, 45, 67, 78 };
+            jaggedArray[4] = new int[] { 1, 0, 2, 4, 6, 34, 54, 67, 87, 78 };
 
             int n1 = hourglassSum(jagged_arr);
             int[] staticIntArray12 = new int[7] { 200, -20, -20, -20, -20, -20, -20 };
