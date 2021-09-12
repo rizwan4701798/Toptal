@@ -21,9 +21,137 @@ namespace TestConsoleApp
                  }
   }
  
-
     class Program
     {
+
+        class Node
+        {
+
+            public int Data;
+            public Node LeftNode;
+            public Node RightNode;
+
+            public Node()
+            {
+
+            }
+
+            public Node(int num)
+            {
+                this.Data = num;
+            }
+        }
+
+        class BTree
+        {
+
+            public Node Root;
+            public int MaxSum = 0;
+            public string MaxSumPath = "";
+
+            public Node GetRoot()
+            {
+                return Root;
+            }
+
+            public void FindMaxSumandPath(Node RootNode, int[] pathArray, int currentPathIndex)
+            {
+
+                if (RootNode == null)
+                {
+                    return;
+                }
+
+                pathArray[currentPathIndex] = RootNode.Data;
+
+                if (currentPathIndex > 0)
+                {
+                    if ((IsEven(pathArray[currentPathIndex]) && IsEven(pathArray[currentPathIndex - 1])) || (IsOdd(pathArray[currentPathIndex]) && IsOdd(pathArray[currentPathIndex - 1])))
+                    {
+                        return;
+                    }
+                }
+                currentPathIndex++;
+
+                if (RootNode.LeftNode == null && RootNode.RightNode == null) // Bottom Node
+                {
+
+                    int currentPathSum = 0;
+                    currentPathSum = GetPathSum(pathArray, currentPathIndex);
+
+                    if (currentPathSum > MaxSum)
+                    {
+                        MaxSumPath = GetPath(pathArray, currentPathIndex);
+                        MaxSum = currentPathSum;
+                    }
+                }
+                else
+                {
+                    // recursive calls
+                    FindMaxSumandPath(RootNode.LeftNode, pathArray, currentPathIndex);
+                    FindMaxSumandPath(RootNode.RightNode, pathArray, currentPathIndex);
+                }
+            }
+
+            public bool IsEven(int num)
+            {
+                return (num % 2 == 0) ? true : false;
+            }
+
+            public bool IsOdd(int num)
+            {
+                return (num % 2 == 0) ? false : true;
+            }
+
+            string GetPath(int[] ints, int len)
+            {
+                int i;
+                string strPath = "";
+                for (i = 0; i < len; i++)
+                {
+                    strPath = strPath + ints[i].ToString();
+                    if (i < len - 1)
+                        strPath = strPath + ", ";
+                }
+
+                return strPath;
+            }
+
+            int GetPathSum(int[] ints, int len)
+            {
+                int i;
+                int pathSum = 0;
+                for (i = 0; i < len; i++)
+                {
+                    pathSum = pathSum + ints[i];
+                }
+                return pathSum;
+            }
+
+
+            public BTree()
+            {
+
+                Root = null;
+
+            }
+
+            public Node CreateNewNode(int data)
+            {
+                Node newNode = new Node();
+                newNode.Data = data;
+                newNode.LeftNode = null;
+                newNode.RightNode = null;
+
+                if (Root == null)
+                    Root = newNode;
+
+                return (newNode);
+            }
+
+
+        }
+
         public ListNode ReverseList(ListNode head)
         {
             if (head == null)
@@ -69,10 +197,57 @@ namespace TestConsoleApp
         
         }
 
+
+        public static int CalPiontList(string[] ops)
+        {
+            int totalScore = 0;
+            //  ArrayList arList = new ArrayList();
+            var arList = new List<int>();
+
+
+
+
+
+            for (int i = 0; i < ops.Length; i++)
+            {
+                int variable = 0;
+                int.TryParse(ops[i], out variable);
+
+                if (ops[i] == "D")
+                {
+
+
+                    arList.Add(2 * arList[arList.Count - 1]);
+                }
+                else if (ops[i] == "C")
+                {
+                    arList.RemoveAt(arList.Count - 1);
+                }
+                else if (ops[i] == "+")
+                {
+                    arList.Add(arList[arList.Count - 1]+ arList[arList.Count - 2]);
+                }
+                else
+                {
+                    arList.Add(variable);
+                }
+            }
+
+            foreach (var item in arList)
+            {
+                totalScore = totalScore + int.Parse(item.ToString());
+            }
+
+            return totalScore;
+
+        }
+
         public static int CalPiont(string[] ops)
         {
             int totalScore = 0;
             ArrayList arList = new ArrayList();
+
+           
 
            
 
@@ -117,7 +292,7 @@ namespace TestConsoleApp
         public static int[] TwoSum(int[] nums, int target)
         {
 
-            IDictionary<int, int> numberNames = new Dictionary<int, int>();
+            var numberNames = new Dictionary<int, int>();
             int[] ar = new int[2];
             for (int i = 0; i < nums.Length; i++)
             {
@@ -141,6 +316,51 @@ namespace TestConsoleApp
                 }
             }
             return ar;
+        }
+
+
+        public static int CounElementsWithList(int[] arr)
+        {
+
+            Array.Sort(arr);
+            int totalCount = 0;
+            int duplicateCount = 1;
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (i > 0)
+                {
+
+                    if (arr[i] == arr[i - 1])
+                    {
+                        duplicateCount++;
+                        continue;
+                    }
+                    else
+                    {
+
+                        if (i < arr.Length - 1)
+                        {
+                            if (arr[i] == arr[i + 1] - 1)
+                            {
+                                totalCount = totalCount + duplicateCount;
+                            }
+                            else {
+                                duplicateCount = 1;
+                            }
+                        }
+                        
+                     
+                    }
+
+                }
+
+               
+
+            }
+
+            return totalCount;
+
         }
 
         public static int CounElements(int[] arr)
@@ -258,11 +478,28 @@ namespace TestConsoleApp
 
             return result;
         }
+
+        public static void problem1(int[] arr)
+        { 
+        
+        }
+
+        public static void problem2(int[] arr)
+        {
+
+        }
+
         static void Main(string[] args)
         {
 
             int[] intstaticIntArray1245 = new int[3] { 1,2,3};
             int grtr = CounElements(intstaticIntArray1245);
+
+            int[] inst55 = new int[3] { 1, 2, 3 };
+
+            problem1(inst55);
+            problem2(inst55); 
+
 
 
 
@@ -271,11 +508,11 @@ namespace TestConsoleApp
 
             string[] staticIntArray12456 = new string[8] { "5", "-2", "4", "C", "D", "9", "+", "+" };
 
-            CalPiont(staticIntArray12456);
+            CalPiontList(staticIntArray12456);
 
             SieveOfEratosthenes(50);
 
-
+            #region code1
 
             int[][] jagged_arr =
   {
@@ -309,7 +546,7 @@ namespace TestConsoleApp
             //int[] staticIntArray12 = new int[3] { 3,2,4};
             TwoSum(staticIntArray12, 6);
             // TextWriter textWriter = new StreamWriter(@System.Environment.GetEnvironmentVariable("OUTPUT_PATH"), true);
-            IDictionary<int, int> numberNames = new Dictionary<int, int>();
+            var numberNames = new Dictionary<int, int>();
             numberNames.Add(0, 2); //adding a key/value using the Add() method
             numberNames.Add(1, 7);
             numberNames.Add(2, 9);
@@ -322,6 +559,8 @@ namespace TestConsoleApp
             intArray = new int[5];
             //int[] intArray;
             //intArray = new int[100];
+
+            #endregion
             #region code
             int[] staticIntArray = new int[3] { 1, 3, 5 };
             int[,] numbers = new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
@@ -398,7 +637,7 @@ namespace TestConsoleApp
             int index = 0;
             int freeMonthCounter = 12;
 
-            IDictionary<int, string> dict = new Dictionary<int, string>();
+            var dict = new Dictionary<int, string>();
 
             for (int i = 0; i < A.Length; i++)
             {
@@ -420,6 +659,8 @@ namespace TestConsoleApp
                                 var counter =  Int32.Parse(arrdictvalue[0]) + 1;
                                 var sum = Int32.Parse(arrdictvalue[1]) + A[i];
                                 dict.Remove(index);
+
+                           
                                 dict.Add(index, counter + "," + sum);
                             }
                         }
