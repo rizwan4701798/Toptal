@@ -20,138 +20,155 @@ namespace TestConsoleApp
             this.next = next;
                  }
   }
- 
-    class Program
+
+
+  public class TreeNode
+    {
+      public int val;
+      public TreeNode left;
+      public TreeNode right;
+      public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+        {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+                 }
+  }
+
+
+    class Node
     {
 
-        class Node
+        public int Data;
+        public Node LeftNode;
+        public Node RightNode;
+
+        public Node()
         {
 
-            public int Data;
-            public Node LeftNode;
-            public Node RightNode;
-
-            public Node()
-            {
-
-            }
-
-            public Node(int num)
-            {
-                this.Data = num;
-            }
         }
 
-        class BTree
+        public Node(int num)
+        {
+            this.Data = num;
+        }
+    }
+
+    class BTree
+    {
+
+        public Node Root;
+        public int MaxSum = 0;
+        public string MaxSumPath = "";
+
+        public Node GetRoot()
+        {
+            return Root;
+        }
+
+        public void FindMaxSumandPath(Node RootNode, int[] pathArray, int currentPathIndex)
         {
 
-            public Node Root;
-            public int MaxSum = 0;
-            public string MaxSumPath = "";
-
-            public Node GetRoot()
+            if (RootNode == null)
             {
-                return Root;
+                return;
             }
 
-            public void FindMaxSumandPath(Node RootNode, int[] pathArray, int currentPathIndex)
-            {
+            pathArray[currentPathIndex] = RootNode.Data;
 
-                if (RootNode == null)
+            if (currentPathIndex > 0)
+            {
+                if ((IsEven(pathArray[currentPathIndex]) && IsEven(pathArray[currentPathIndex - 1])) || (IsOdd(pathArray[currentPathIndex]) && IsOdd(pathArray[currentPathIndex - 1])))
                 {
                     return;
                 }
+            }
+            currentPathIndex++;
 
-                pathArray[currentPathIndex] = RootNode.Data;
+            if (RootNode.LeftNode == null && RootNode.RightNode == null) // Bottom Node
+            {
 
-                if (currentPathIndex > 0)
+                int currentPathSum = 0;
+                currentPathSum = GetPathSum(pathArray, currentPathIndex);
+
+                if (currentPathSum > MaxSum)
                 {
-                    if ((IsEven(pathArray[currentPathIndex]) && IsEven(pathArray[currentPathIndex - 1])) || (IsOdd(pathArray[currentPathIndex]) && IsOdd(pathArray[currentPathIndex - 1])))
-                    {
-                        return;
-                    }
-                }
-                currentPathIndex++;
-
-                if (RootNode.LeftNode == null && RootNode.RightNode == null) // Bottom Node
-                {
-
-                    int currentPathSum = 0;
-                    currentPathSum = GetPathSum(pathArray, currentPathIndex);
-
-                    if (currentPathSum > MaxSum)
-                    {
-                        MaxSumPath = GetPath(pathArray, currentPathIndex);
-                        MaxSum = currentPathSum;
-                    }
-                }
-                else
-                {
-                    // recursive calls
-                    FindMaxSumandPath(RootNode.LeftNode, pathArray, currentPathIndex);
-                    FindMaxSumandPath(RootNode.RightNode, pathArray, currentPathIndex);
+                    MaxSumPath = GetPath(pathArray, currentPathIndex);
+                    MaxSum = currentPathSum;
                 }
             }
-
-            public bool IsEven(int num)
+            else
             {
-                return (num % 2 == 0) ? true : false;
+                // recursive calls
+                FindMaxSumandPath(RootNode.LeftNode, pathArray, currentPathIndex);
+                FindMaxSumandPath(RootNode.RightNode, pathArray, currentPathIndex);
+            }
+        }
+
+        public bool IsEven(int num)
+        {
+            return (num % 2 == 0) ? true : false;
+        }
+
+        public bool IsOdd(int num)
+        {
+            return (num % 2 == 0) ? false : true;
+        }
+
+        string GetPath(int[] ints, int len)
+        {
+            int i;
+            string strPath = "";
+            for (i = 0; i < len; i++)
+            {
+                strPath = strPath + ints[i].ToString();
+                if (i < len - 1)
+                    strPath = strPath + ", ";
             }
 
-            public bool IsOdd(int num)
+            return strPath;
+        }
+
+        int GetPathSum(int[] ints, int len)
+        {
+            int i;
+            int pathSum = 0;
+            for (i = 0; i < len; i++)
             {
-                return (num % 2 == 0) ? false : true;
+                pathSum = pathSum + ints[i];
             }
-
-            string GetPath(int[] ints, int len)
-            {
-                int i;
-                string strPath = "";
-                for (i = 0; i < len; i++)
-                {
-                    strPath = strPath + ints[i].ToString();
-                    if (i < len - 1)
-                        strPath = strPath + ", ";
-                }
-
-                return strPath;
-            }
-
-            int GetPathSum(int[] ints, int len)
-            {
-                int i;
-                int pathSum = 0;
-                for (i = 0; i < len; i++)
-                {
-                    pathSum = pathSum + ints[i];
-                }
-                return pathSum;
-            }
+            return pathSum;
+        }
 
 
-            public BTree()
-            {
+        public BTree()
+        {
 
-                Root = null;
-
-            }
-
-            public Node CreateNewNode(int data)
-            {
-                Node newNode = new Node();
-                newNode.Data = data;
-                newNode.LeftNode = null;
-                newNode.RightNode = null;
-
-                if (Root == null)
-                    Root = newNode;
-
-                return (newNode);
-            }
-
+            Root = null;
 
         }
 
+        public Node CreateNewNode(int data)
+        {
+            Node newNode = new Node();
+            newNode.Data = data;
+            newNode.LeftNode = null;
+            newNode.RightNode = null;
+
+            if (Root == null)
+                Root = newNode;
+
+            return (newNode);
+        }
+
+
+    }
+
+    class Program
+    {
+
+
+        public int sum = 0;
         public ListNode ReverseList(ListNode head)
         {
             if (head == null)
@@ -379,6 +396,7 @@ namespace TestConsoleApp
                     {
                         duplicateCount++;
                         continue;
+                   
                     }
                     else {
                         duplicateCount = 1;
@@ -392,6 +410,9 @@ namespace TestConsoleApp
                     {
                         totalCount = totalCount + duplicateCount;
                     }
+                    else {
+                        duplicateCount = 1;  
+                      }
                 }
 
             }
@@ -479,13 +500,29 @@ namespace TestConsoleApp
             return result;
         }
 
-        public static void problem1(int[] arr)
-        { 
-        
+        public static void Solve(TreeNode root, TreeNode Parent)
+        {
+            if (root == null) return;
+            if ((root.left == null) && (root.right == null) && (Parent.left == root))
+            {
+                sum = sum + root.val;
+
+            }
+            else
+            {
+                Solve(root.left, root);
+                Solve(root.right, root);
+
+            }
+
         }
 
-        public static void problem2(int[] arr)
+        public static int SumOfLeftLeaves(TreeNode root)
         {
+
+            Solve(root, root);
+            return sum;
+
 
         }
 
@@ -497,8 +534,6 @@ namespace TestConsoleApp
 
             int[] inst55 = new int[3] { 1, 2, 3 };
 
-            problem1(inst55);
-            problem2(inst55); 
 
 
 
