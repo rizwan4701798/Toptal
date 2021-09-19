@@ -168,7 +168,7 @@ namespace TestConsoleApp
     {
 
 
-        public int sum = 0;
+        public static int sum = 0;
         public ListNode ReverseList(ListNode head)
         {
             if (head == null)
@@ -526,8 +526,136 @@ namespace TestConsoleApp
 
         }
 
+
+        public static bool MakeEqual(string[] words)
+        {
+            int[] freq = new int[26];
+
+
+            foreach (var word in words)
+            {
+                foreach (var chr in word)
+                {
+                    freq[chr - 'a']++;
+                }
+            }
+
+            for (int i = 0; i < 26; i++)
+            {
+                if (freq[i] % words.Length != 0)
+                    return false;
+            }
+
+            return true;
+        }
+
+        public static void Merge(int[] nums1, int m, int[] nums2, int n)
+        {
+            int nInidex = 0;
+            int mInidex = 0;
+            int[] result = new int[nums1.Length];
+            int curElem = 0;
+
+            if (n == 0)
+            {
+                return;
+            }
+
+            if (m == 0)
+            {
+
+                Array.Copy(nums2, nums1, nums2.Length);
+                return;
+            }
+
+            int index = 0;
+            for (int i = m; i < nums1.Length; i++)
+            {
+                nums1[i] = nums2[index++];
+            }
+
+            Array.Sort(nums1);
+        }
+        public static int MaxSubArray(int[] nums)
+        {
+            int MaxSum = nums[0];
+            int currSum = 0;
+
+            foreach (var num in nums)
+            {
+                if (currSum < 0) currSum = 0;
+                currSum = currSum + num;
+                MaxSum = Math.Max(MaxSum, currSum);
+
+
+            }
+            return MaxSum;
+        }
+
+
+        public static int[] Intersect(int[] nums1, int[] nums2)
+        {
+            var dArray = new List<int> { };
+            int nIndex = 0;
+            int mIndex = 0;
+
+            Array.Sort(nums1);
+            Array.Sort(nums2);
+
+            for (int i = 0; i < nums1.Length + nums2.Length; i++)
+            {
+
+                if (nIndex >= nums1.Length) break;
+                if (mIndex >= nums2.Length) break;
+
+                if (nums1[nIndex] == nums2[mIndex])
+                {
+                    dArray.Add(nums1[nIndex]);
+                    nIndex++;
+                    mIndex++;
+                }
+
+                else if (nums1[nIndex] > nums2[mIndex])
+                {
+                    mIndex++;
+                }
+                else
+                {
+                    nIndex++;
+
+                }
+
+
+
+            }
+
+            return dArray.ToArray();
+
+        }
+
+
         static void Main(string[] args)
         {
+
+
+            //int[] num1 = new int[6] { 1, 2, 3, 0, 0, 0 };
+
+            //int[] num2 = new int[3] { 2, 5, 6 };
+
+            int[] num1 = new int[4] { 1,2,2,1};
+
+            int[] num2 = new int[2] { 2,2};
+
+            var ty = Intersect(num1, num2);
+
+
+
+            Merge(num1, 1, num2, 1);
+
+
+            string[] str77 = new string[3] { "abc", "aabc", "bc" };
+            MakeEqual(str77);
+
 
             int[] intstaticIntArray1245 = new int[3] { 1,2,3};
             int grtr = CounElements(intstaticIntArray1245);
@@ -773,6 +901,35 @@ namespace TestConsoleApp
 
             return totalBalace;
 
+        }
+
+        public bool SearchMatrix(int[][] matrix, int target)
+        {
+
+            int pos = -1;
+            for (int j = 0; j < matrix.Length; j++)
+            {
+                for (int k = 0; k < matrix[j].Length; k++)
+                {
+                    if ((matrix[j][k] > target) || (matrix[j][matrix[j].Length - 1] < target))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        pos = Array.BinarySearch(matrix[j], target);
+                    }
+                }
+            }
+
+            if (pos > -1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static int hourglassSum(int[][] arr)
