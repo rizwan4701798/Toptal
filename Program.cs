@@ -638,6 +638,10 @@ namespace TestConsoleApp
         {
 
 
+            string strString = "aadadaad";
+            var abvfr = FirstUniqChar(strString);
+
+
             //int[] num1 = new int[6] { 1, 2, 3, 0, 0, 0 };
 
             //int[] num2 = new int[3] { 2, 5, 6 };
@@ -836,6 +840,8 @@ namespace TestConsoleApp
 
             foreach (KeyValuePair<int, string> entry in dict)
             {
+
+
                 var arrValue = entry.Value.Split(',');
                 if ((Int32.Parse(arrValue[0]) >= 3) && (Int32.Parse(arrValue[1]) <= -100))
                 {
@@ -845,6 +851,68 @@ namespace TestConsoleApp
 
             totalBalace = totalBalace - (5 * freeMonthCounter);
             return totalBalace;
+        }
+
+
+        public static bool CanConstruct(string ransomNote, string magazine)
+        {
+
+            if ((ransomNote == "") || (magazine == ""))
+                return false;
+
+
+            int[] freq = new int[26];
+            int[] freq1 = new int[26];
+
+            foreach (var c in magazine)
+            {
+                freq[c - 'a']++;
+            }
+
+
+            foreach (var c in ransomNote)
+            {
+                freq1[c - 'a']++;
+            }
+
+
+            for (int i = 0; i < freq.Length; i++)
+            {
+                if (freq[i] < freq1[i])
+                {
+                    return false;
+                }
+
+            }
+
+
+            return true;
+
+
+
+
+        }
+
+        public static int FirstUniqChar(string s)
+        {
+
+            if (string.IsNullOrEmpty(s))
+                return -1;
+
+            int[] freq = new int[26];
+            foreach (var c in s)
+            {
+                freq[c - 'a']++;
+            }
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (freq[s[i] - 'a'] == 1)
+                    return i;
+            }
+
+            return -1;
+
         }
         public static int solution123(int[] A, string[] D)
         {
