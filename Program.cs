@@ -853,6 +853,194 @@ namespace TestConsoleApp
             return totalBalace;
         }
 
+        public static ListNode RemoveElements(ListNode head, int val)
+        {
+
+            ArrayList arr = new ArrayList();
+            ArrayList arr1 = new ArrayList();
+            while (head != null)
+            {
+                arr.Add(head.val);
+                head = head.next;
+            }
+            for (int i = 0; i < arr.Count; i++)
+            {
+                if (int.Parse(arr[i].ToString()) == val)
+                {
+                    continue;
+                }
+                else
+                {
+                    arr1.Add(int.Parse(arr[i].ToString()));
+                }
+            }
+            ListNode tail = null;
+            for (int j = 0; j < arr1.Count; j++)
+            {
+                if (head == null)
+                {
+                    head = new ListNode(int.Parse(arr1[j].ToString()));
+                    tail = head;
+                }
+                else
+                {
+                    ListNode newNode = new ListNode(int.Parse(arr1[j].ToString()));
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+            }
+            return head;
+
+
+
+        }
+
+        public static ListNode MergeTwoLists(ListNode l1, ListNode l2)
+        {
+
+            //TC : O(n) ; SC : O(1)
+            if (l1 == null && l2 == null)
+                return l1;
+            if (l1 == null)
+                return l2;
+            else if (l2 == null)
+                return l1;
+
+            ListNode head = null, tail = null;
+
+            if (l1.val <= l2.val)
+            {
+                head = tail = l1;
+                l1 = l1.next;
+            }
+            else
+            {
+                head = tail = l2;
+                l2 = l2.next;
+            }
+
+            while (l1 != null && l2 != null)
+            {
+                if (l1.val <= l2.val)
+                {
+                    tail.next = l1;
+                    tail = l1;
+                    l1 = l1.next;
+                }
+                else
+                {
+                    tail.next = l2; //pointing/making link to that node
+                    tail = l2; // moving it to that node
+                    l2 = l2.next;
+
+                }
+            }
+            if (l1 == null) // if anyone of the list finishes early we move tail to the other list
+                tail.next = l2;
+            else
+                tail.next = l1;
+
+            return head;
+
+
+        }
+
+
+        public static bool hasCycle(ListNode head)
+        {
+            if (head == null)
+            {
+                return false;
+            }
+
+            HashSet<ListNode> nodeSet = new HashSet<ListNode>();
+
+            ListNode pointer = new ListNode(head.val);
+            pointer.next = head.next;
+            // Iterage through the linked list
+            while (pointer != null)
+            {
+                // Check if the node is in the set already
+                if (nodeSet.Contains(pointer))
+                {
+                    return true;
+                }
+                else
+                {
+                    nodeSet.Add(pointer);
+                    pointer = pointer.next;
+                }
+            }
+            return false;
+        }
+
+        public static int MaxProfit(int[] prices)
+        {
+
+            int maxProfit = 0;
+
+            if (prices.Length > 1)
+            {
+                int buy = 0;
+                int sell = 1;
+
+                while (sell < prices.Length)
+                {
+                    if (prices[sell] < prices[buy])
+                    {
+                        buy = sell;
+                    }
+                    else
+                    {
+                        if (prices[sell] - prices[buy] > maxProfit)
+                        {
+                            maxProfit = prices[sell] - prices[buy];
+                        }
+                    }
+                    sell++;
+                }
+
+            }
+            else
+            {
+                return 0;
+            }
+
+            return maxProfit;
+        }
+        public static bool IsAnagram(string s, string t)
+        {
+            if ((s == "") || (t == ""))
+                return false;
+
+
+            int[] freq = new int[26];
+            int[] freq1 = new int[26];
+
+            foreach (var c in s)
+            {
+                freq[c - 'a']++;
+            }
+
+
+            foreach (var c in t)
+            {
+                freq1[c - 'a']++;
+            }
+
+
+            for (int i = 0; i < freq.Length; i++)
+            {
+                if (freq[i] != freq1[i])
+                {
+                    return false;
+                }
+
+            }
+
+
+            return true;
+        }
 
         public static bool CanConstruct(string ransomNote, string magazine)
         {
