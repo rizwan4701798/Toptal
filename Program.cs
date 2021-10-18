@@ -14,7 +14,8 @@ namespace TestConsoleApp
     {
       public int val;
       public ListNode next;
-     public ListNode(int val = 0, ListNode next = null)
+      public  List<int> lst = new List<int>();
+        public ListNode(int val = 0, ListNode next = null)
         {
             this.val = val;
             this.next = next;
@@ -517,6 +518,40 @@ namespace TestConsoleApp
 
         }
 
+        public static void Solve(TreeNode root, TreeNode parent, int val)
+        {
+            if ((root == null) && (val < parent.val))
+            {
+                parent.left = new TreeNode(val);
+                return;
+            }
+            else if ((root == null) && (val > parent.val))
+            {
+                parent.right = new TreeNode(val);
+                return;
+            }
+            if (val < root.val)
+            {
+                Solve(root.left, root, val);
+            }
+            else
+            {
+                Solve(root.right, root, val);
+            }
+        }
+
+        public static TreeNode InsertIntoBST(TreeNode root, int val)
+        {
+            if (root == null)
+            {
+                root = new TreeNode(val);
+                return root;
+            }
+
+            Solve(root, root, val);
+            return root;
+        }
+
         public static int SumOfLeftLeaves(TreeNode root)
         {
 
@@ -901,10 +936,13 @@ namespace TestConsoleApp
 
         }
 
-        List<int> lst = new List<int>();
+        
+          
         public static IList<int> PreorderTraversal(TreeNode root)
         {
 
+            List<int> lst = new List<int>();
+            
             if (root == null)
             {
                 return lst;
@@ -915,6 +953,109 @@ namespace TestConsoleApp
             PreorderTraversal(root.left);
 
             PreorderTraversal(root.right);
+
+            return lst;
+        }
+
+        int iMaxDepth = 0;
+
+        public void Solve(TreeNode root, int currentDepth)
+        {
+            if (root == null) return;
+
+            currentDepth++;
+
+            if ((root.left == null) && (root.right == null))
+            {
+                if (currentDepth > iMaxDepth) iMaxDepth = currentDepth;
+            }
+            else
+            {
+                Solve(root.left, currentDepth);
+                Solve(root.right, currentDepth);
+            }
+
+        }
+
+        public int MaxDepth(TreeNode root)
+        {
+
+            Solve(root, 0);
+            return iMaxDepth;
+
+        }
+
+        public void SolveInvertTree(TreeNode root)
+        {
+            if (root == null) return;
+
+            TreeNode tempNode = new TreeNode();
+
+            tempNode = root.left;
+            root.left = root.right;
+            root.right = tempNode;
+
+
+            SolveInvertTree(root.left);F
+            SolveInvertTree(root.right);
+
+
+
+        }
+
+        public TreeNode InvertTree(TreeNode root)
+        {
+            SolveInvertTree(root);
+            return root;
+        }
+
+
+        public static IList<int> InorderTraversal(TreeNode root)
+        {
+
+            List<int> lst = new List<int>();
+
+            if (root == null)
+            {
+                return lst;
+
+            }
+
+            if (root.left != null)
+            {
+                InorderTraversal(root.left);
+            }
+            lst.Add(root.val);
+            if (root.right != null)
+            {
+                InorderTraversal(root.right);
+            }
+
+            return lst;
+        }
+
+ 
+        public static IList<int> PostorderTraversal(TreeNode root)
+        {
+
+            List<int> lst = new List<int>();
+            if (root == null)
+            {
+                return lst;
+
+            }
+
+            if (root.left != null)
+            {
+                PostorderTraversal(root.left);
+            }
+
+            if (root.right != null)
+            {
+                PostorderTraversal(root.right);
+            }
+
+            lst.Add(root.val);
 
             return lst;
         }
