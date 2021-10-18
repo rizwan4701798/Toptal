@@ -838,7 +838,7 @@ namespace TestConsoleApp
                 }
             }
 
-            foreach (KeyValuePair<int, string> entry in dict)
+            foreach (var entry in dict)
             {
 
 
@@ -851,6 +851,72 @@ namespace TestConsoleApp
 
             totalBalace = totalBalace - (5 * freeMonthCounter);
             return totalBalace;
+        }
+
+
+        public ListNode DeleteDuplicates(ListNode head)
+        {
+
+
+            ListNode tail = head;
+
+            if ((head == null) || (head.next == null))
+            {
+                return head;
+
+            }
+
+
+            while (tail.next != null)
+            {
+
+                if (tail.val == tail.next.val)
+                {
+
+                    if (tail.next.next != null)
+                    {
+                        tail.next = tail.next.next;
+                    }
+                    else
+                    {
+                        tail.next = null;
+
+                    }
+                }
+                else
+                {
+                    if (tail.next != null)
+                        tail = tail.next;
+                    else
+                        tail.next = null;
+
+                }
+
+
+            }
+
+            return head;
+
+
+
+        }
+
+        List<int> lst = new List<int>();
+        public static IList<int> PreorderTraversal(TreeNode root)
+        {
+
+            if (root == null)
+            {
+                return lst;
+            }
+
+            lst.Add(root.val);
+
+            PreorderTraversal(root.left);
+
+            PreorderTraversal(root.right);
+
+            return lst;
         }
 
         public static ListNode RemoveElements(ListNode head, int val)
@@ -893,6 +959,55 @@ namespace TestConsoleApp
 
 
 
+        }
+
+
+        public ListNode ReverseListiterative(ListNode head)
+        {
+            ListNode cur = head;
+            ListNode prev = null;
+
+            while (cur != null)
+            {
+                ListNode temp = cur.next;
+                cur.next = prev;
+                prev = cur;
+                cur = temp;
+
+            }
+            return prev;
+        }
+
+        public static ListNode ReverseListArrayList(ListNode head)
+        {
+            var arr = new ArrayList();
+
+            while (head != null)
+            {
+                arr.Add(head.val);
+                head = head.next;
+
+            }
+
+            ListNode tail = null;
+            for (int j = arr.Count - 1; j >= 0; j--)
+            {
+
+                if (head == null)
+                {
+                    head = new ListNode(int.Parse(arr[j].ToString()));
+                    tail = head;
+                }
+                else
+                {
+                    var newNode = new ListNode(int.Parse(arr[j].ToString()));
+                    tail.next = newNode;
+                    tail = newNode;
+                }
+
+            }
+
+            return head;
         }
 
         public static ListNode MergeTwoLists(ListNode l1, ListNode l2)
