@@ -6,6 +6,7 @@ using System.Threading;
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace TestConsoleApp
 {
@@ -1358,6 +1359,37 @@ namespace TestConsoleApp
             return -1;
 
         }
+
+
+        public string ReverseWords(string s)
+        {
+            s = s.Trim();
+            var arrS = s.Split(' ');
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = arrS.Length - 1; i >= 0; i--)
+            {
+                if (arrS[i].ToString() == " ")
+                {
+
+                    continue;
+                }
+
+                if (arrS[i].ToString() == "")
+                {
+
+                    continue;
+                }
+
+                string tS = arrS[i].ToString().Trim();
+                sb.Append(tS);
+
+                if (i > 0) sb.Append(" ");
+
+            }
+
+            return sb.ToString();
+        }
         public static int solution123(int[] A, string[] D)
         {
             // write your code in C# 6.0 with .NET 4.5 (Mono)
@@ -1413,6 +1445,45 @@ namespace TestConsoleApp
 
             return totalBalace;
 
+        }
+
+        public bool IsValidSudoku(char[][] board)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    char c = board[i][j];
+                    if (c != '.')
+                    {
+                        if (!validate(board, i, j, c))
+                        {
+                            // System.out.println(c + "   " + i + "   " + j);
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+
+        public bool validate(char[][] board, int row, int col, char c)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (i != row && board[i][col] != '.' && board[i][col] == c)
+                    return false; //check rows
+                if (i != col && board[row][i] != '.' && board[row][i] == c)
+                    return false; //check columns
+
+                int x = 3 * (row / 3) + i / 3;
+                int y = 3 * (col / 3) + i % 3;
+
+                if (x != row && y != col && board[x][y] != '.' && board[x][y] == c)
+                    return false; //check 3*3 block
+            }
+            return true;
         }
 
         public bool SearchMatrix(int[][] matrix, int target)
