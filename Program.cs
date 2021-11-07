@@ -11,7 +11,32 @@ using System.Text;
 namespace TestConsoleApp
 {
 
-     public class ListNode
+
+    public class KthLargest
+    {
+
+        private int kth;
+        private List<int> stream;
+        public KthLargest(int k, int[] nums)
+        {
+            kth = k;
+            Array.Sort(nums);
+            stream = new List<int>(nums);
+        }
+
+        public int Add(int val)
+        {
+            int idx = stream.BinarySearch(val); // O(log N)
+
+            if (idx < 0)
+                stream.Insert(~idx, val); // O(n)
+            else
+                stream.Insert(idx, val); // O(n)
+
+            return stream[stream.Count - kth];
+        }
+    }
+    public class ListNode
     {
       public int val;
       public ListNode next;
@@ -669,13 +694,156 @@ namespace TestConsoleApp
 
         }
 
+        public static bool IsValid(string s)
+        {
+            var myStack = new Stack<string>();
+            var popString = "";
+
+            if (s.Length == 1)
+            {
+                return false;
+            }
+
+
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if ((s[i] == '(') || (s[i] == '{') || (s[i] == '['))
+                {
+                    myStack.Push(s[i].ToString());
+                }
+                else
+                {
+
+                    if (myStack.Count == 0)
+                    {
+                        return false;
+                    }
+
+                    popString = myStack.Pop();
+
+                    if ((s[i] == ')') && (popString != "("))
+                    {
+                        return false;
+                    }
+                    else if ((s[i] == '}') && (popString != "{"))
+                    {
+                        return false;
+                    }
+                    else if ((s[i] == ']') && (popString != "["))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (myStack.Count == 0) return true;
+            else return false;
+        }
+
+
+        public static int[][] MatrixReshape(int[][] mat, int r, int c)
+        {
+
+
+            if (mat == null) return null;
+
+            if ((r == 0) && (c == 0)) return mat;
+
+
+
+
+            int[] num1 = new int[r * c];
+            int counter = 0;
+
+            // Declare the array of two elements.
+            int[][] arr = new int[r][];
+
+            for (int x = 0; x < r; x++)
+            {
+                arr[x] = new int[c];
+
+            }
+
+            if ((mat.Length * mat[0].Length) != (arr.Length * arr[0].Length))
+            {
+                return mat;
+            }
+
+
+
+            for (int i = 0; i < mat.Length; i++)
+            {
+                for (int j = 0; j < mat[i].Length; j++)
+                {
+
+
+
+                    num1[counter] = mat[i][j];
+                    counter++;
+                }
+            }
+
+            counter = 0;
+
+            for (int k = 0; k < arr.Length; k++)
+            {
+                for (int m = 0; m < arr[k].Length; m++)
+                {
+                    arr[k][m] = num1[counter];
+                    counter++;
+                }
+            }
+
+            return arr;
+
+        }
+
+      
+
+
+        public int[][] MatrixReshapeEfficient(int[][] mat, int r, int c)
+        {
+
+
+            if (mat[0].Length * mat.Length != r * c)
+                return mat;
+            int[][] a = new int[r][];
+
+            for (int x = 0; x < r; x++)
+            {
+                a[x] = new int[c];
+
+            }
+
+
+            int m = 0, n = 0;
+            for (int i = 0; i < mat.Length; i++)
+            {
+                for (int j = 0; j < mat[i].Length; j++)
+                {
+                    a[m][n++] = mat[i][j];
+                    if (n > c - 1)
+                    {
+                        n = 0;
+                        m++;
+                    }
+                }
+            }
+
+            return a;
+
+        }
+
 
         static void Main(string[] args)
         {
 
 
-            string strString = "aadadaad";
-            var abvfr = FirstUniqChar(strString);
+
+
+            string strString = "()[]{}";
+            var abvfr = IsValid(strString);
 
 
             //int[] num1 = new int[6] { 1, 2, 3, 0, 0, 0 };
@@ -831,6 +999,181 @@ namespace TestConsoleApp
                 fileData = binaryReader.ReadBytes((int)fs.Length);
             }
             return fileData;
+        }
+
+        public static  int[] SortArray(int[] nums)
+        {
+            SortMerge(nums, 0, nums.Length - 1);
+            return nums;
+        }
+
+        public static void MainMerge(int[] numbers, int left, int mid, int right)
+        {
+            int[] temp = new int[numbers.Length];
+            int i, eol, num, pos;
+            eol = (mid - 1);
+            pos = left;
+            num = (right - left + 1);
+
+            while ((left <= eol) && (mid <= right))
+            {
+                if (numbers[left] <= numbers[mid])
+                    temp[pos++] = numbers[left++];
+                else
+                    temp[pos++] = numbers[mid++];
+            }
+            while (left <= eol)
+                temp[pos++] = numbers[left++];
+            while (mid <= right)
+                temp[pos++] = numbers[mid++];
+            for (i = 0; i < num; i++)
+            {
+                numbers[right] = temp[right];
+                right--;
+            }
+        }
+
+        bool solve(TreeNode root, long left, long right)
+        {
+            if (root == null)
+            {
+                return true;
+            }
+            if (root.val <= left || root.val >= right) return false;
+            return solve(root.left, left, root.val) && solve(root.right, root.val, right);
+
+        }
+
+        public bool IsValidBST(TreeNode root)
+        {
+
+            return solve(root, Int64.MinValue, Int64.MaxValue);
+
+
+        }
+
+        public static void SortMerge(int[] numbers, int left, int right)
+        {
+            int mid;
+            if (right > left)
+            {
+                mid = (right + left) / 2;
+                SortMerge(numbers, left, mid);
+                SortMerge(numbers, (mid + 1), right);
+                MainMerge(numbers, left, (mid + 1), right);
+            }
+        }
+
+        public int SingleNumber(int[] nums)
+        {
+
+            if (nums.Length < 2)
+            {
+                return nums[0];
+            }
+
+            Array.Sort(nums);
+
+            for (int i = 0; i < nums.Length - 1; i += 2)
+            {
+                if (nums[i] != nums[i + 1])
+                {
+                    return nums[i];
+                }
+            }
+
+
+            return nums[nums.Length - 1];
+        }
+
+        public int[][] FloodFill(int[][] image, int sr, int sc, int newColor)
+        {
+            int oldColor = image[sr][sc];
+            change(image, sr, sc, newColor, oldColor);
+            return image;
+        }
+
+
+        public int countIsland(int[][] grid, int i, int j)
+        {
+            if ((i < 0) || (j < 0) || (i > grid.Length - 1) || (j > grid[i].Length - 1) || (grid[i][j] == 0))
+            {
+                return 0;
+            }
+
+
+            grid[i][j] = 0;
+
+            return (1 + countIsland(grid, i + 1, j) +
+              countIsland(grid, i - 1, j) +
+              countIsland(grid, i, j + 1) +
+              countIsland(grid, i, j - 1));
+
+        }
+
+        public int MaxAreaOfIsland(int[][] grid)
+        {
+
+            int iCount = 0;
+            int MaxiCount = 0;
+
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+
+                    if (grid[i][j] == 1)
+                    {
+                        iCount = countIsland(grid, i, j);
+                    }
+
+                    MaxiCount = Math.Max(MaxiCount, iCount);
+
+                    iCount = 0;
+                }
+            }
+
+            return MaxiCount;
+
+        }
+
+        private void change(int[][] image, int sr, int sc, int newColor, int oldColor)
+        {
+            if ((sr >= 0) && (sr <= image.Length - 1) && (sc >= 0) && (sc <= image[0].Length - 1))
+            {
+                if (image[sr][sc] == oldColor && newColor != oldColor)
+                {
+                    image[sr][sc] = newColor;
+                    change(image, sr + 1, sc, newColor, oldColor);
+                    change(image, sr - 1, sc, newColor, oldColor);
+                    change(image, sr, sc + 1, newColor, oldColor);
+                    change(image, sr, sc - 1, newColor, oldColor);
+                }
+            }
+        }
+
+        public int BalancedStringSplit(string s)
+        {
+
+            int rCount = 0;
+            int lCount = 0;
+            int splitCount = 0;
+
+
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == 'L') lCount++;
+                else if (s[i] == 'R') rCount++;
+
+                if ((rCount != 0) && (lCount == rCount))
+                {
+                    rCount = 0;
+                    lCount = 0;
+                    splitCount++;
+                }
+            }
+
+            return splitCount;
         }
         public static int solutionwitdDict(int[] A, string[] D)
         {
@@ -997,7 +1340,7 @@ namespace TestConsoleApp
             root.right = tempNode;
 
 
-            SolveInvertTree(root.left);F
+            SolveInvertTree(root.left);
             SolveInvertTree(root.right);
 
 
