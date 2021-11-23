@@ -12,6 +12,20 @@ namespace TestConsoleApp
 {
 
 
+
+    public enum SomeValues
+    {
+        Red = 1,
+        Blue = 2,
+        Green = 4,
+        Black = 8,
+        White = 16,
+        Orange = 32,
+        Yellow = 64,
+        Pink = 128,
+    }
+
+
     public class KthLargest
     {
 
@@ -62,6 +76,66 @@ namespace TestConsoleApp
                  }
   }
 
+
+
+    public class Solution
+    {
+        int level = 0;
+        int xLevel = 0;
+        int yLevel = 0;
+        int iX = 0;
+        int iY = 0;
+        bool result = false;
+        TreeNode xParent = null;
+        TreeNode yParent = null;
+
+        public void Solve(TreeNode root, TreeNode parent, int Level, int x, int y)
+        {
+            if (root == null) return;
+            if (result) return;
+
+            if (root.val == x)
+            {
+                xLevel = Level;
+                xParent = parent;
+            }
+
+            if (root.val == y)
+            {
+                yLevel = Level;
+                yParent = parent;
+            }
+
+
+
+            if ((root.val == y) && (Level == xLevel) && (parent != xParent))
+            {
+                result = true;
+            }
+
+            if ((root.val == x) && (Level == yLevel) && (parent != yParent))
+            {
+                result = true;
+            }
+
+            Level++;
+
+            Solve(root.left, root, Level, x, y);
+            Solve(root.right, root, Level, x, y);
+
+        }
+
+
+        public bool IsCousins(TreeNode root, int x, int y)
+        {
+            if ((root == null) || (root.val == x) || (root.val == y)) return false;
+
+
+
+            Solve(root, root, level, x, y);
+            return result;
+        }
+    }
 
     class Node
     {
@@ -239,6 +313,85 @@ namespace TestConsoleApp
                 return 1;
             }
         
+        }
+
+
+        public static void bitwiseOperators()
+        {
+            //
+            //   Binary
+            //
+
+            //
+            //   Bitwise operators
+            //
+            //      And     & (Both)
+            //      Or      | (Either)
+            //      Xor     ^ (Exclusive or, different)
+            //      Not     ~ (Invert)
+            //    
+
+            byte a = 122;
+            byte b = 7;
+
+            byte result = (byte)(a & b);
+
+            //Console.WriteLine($"{ Convert.ToString(a, 2).PadLeft(8, '0')} &");
+            //Console.WriteLine($"{ Convert.ToString(b, 2).PadLeft(8, '0')}");
+            //Console.WriteLine($"--------");
+            //Console.WriteLine($"{ Convert.ToString(result, 2).PadLeft(8, '0')}");
+            //Console.WriteLine();
+
+            //
+            //   Bitwise Shifting
+            //
+            //      Left    <<
+            //      Right   >>
+            //      
+
+
+            //byte c = 25;
+
+            //var cResult = (byte)(c << 4);
+
+            //Console.WriteLine($"{ Convert.ToString(c, 2).PadLeft(8, '0')} << 1");
+            //Console.WriteLine($"--------");
+            //Console.WriteLine($"{ Convert.ToString(cResult, 2).PadLeft(8, '0')}");
+
+
+            //   Usage
+            //   
+            //      Toggling boolean
+            //      Enum flags
+            //      Masking
+            //
+
+            // Invert booleans
+            var d = true;
+            d ^= true;
+
+            // Enum flags
+            var someVals = (byte)(SomeValues.Blue);
+            Console.WriteLine($"{ Convert.ToString((byte)someVals, 2).PadLeft(8, '0')}");
+
+            if ((someVals & (byte)SomeValues.Blue) == (byte)SomeValues.Blue)
+                Console.WriteLine("Blue was included");
+            if ((someVals & (byte)SomeValues.White) == (byte)SomeValues.White)
+                Console.WriteLine("White was included");
+
+            // Masking 
+            //
+            // -----1- Input
+            // 0000010 < Important bit (the mask)
+
+            // 0000010
+
+            var input = (byte)(SomeValues.White | SomeValues.Blue);
+            var mask = (byte)SomeValues.Blue;
+            var r = input & mask;
+
+
+            Console.ReadLine();
         }
 
 
@@ -836,8 +989,174 @@ namespace TestConsoleApp
         }
 
 
+        public int[][] Transpose(int[][] matrix)
+        {
+
+
+
+            int[][] result = new int[matrix[0].Length][];
+
+            for (int x = 0; x < matrix[0].Length; x++)
+            {
+                result[x] = new int[matrix.Length];
+
+            }
+
+
+
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                for (int j = 0; j < matrix[0].Length; j++)
+                {
+                    result[j][i] = matrix[i][j];
+                }
+            }
+
+
+            return result;
+
+
+
+        }
+
+
+
+        public void Rotate(int[] nums, int k)
+        {
+
+            if (nums.Length < k) ;
+
+
+            if (k > nums.Length) k %= nums.Length;
+
+
+            int[] temp12Nums = new int[nums.Length];
+
+            Array.Copy(nums, temp12Nums, nums.Length);
+
+            for (int j = 0; j < nums.Length; j++)
+            {
+                int newIndex = j + (k);
+                if (newIndex > nums.Length - 1) newIndex = newIndex - (nums.Length);
+
+                nums[newIndex] = temp12Nums[j];
+            }
+
+
+        }
+
+
+
+        public static int Distance = 0;
+        public static bool BreakExecution = false;
+
+
+
+
+
+        public static int[][] UpdateMatrix(int[][] mat)
+        {
+            if (mat == null) return mat;
+
+            for (int i = 0; i < mat.Length; i++)
+            {
+                for (int j = 0; j < mat[i].Length; j++)
+                {
+                    if (mat[i][j] == 0) continue;
+                    Solve(mat, i, j, out Distance);
+                    mat[i][j] = Distance;
+                    Distance = 0;
+                    BreakExecution = false;
+                }
+            }
+
+            return mat;
+
+        }
+
+        //public static void Solve(int[][] mat, int i, int j, out int Distance)
+        //{
+        //    if ((i < 0) || (j < 0) || (i >= mat.Length) || (j >= mat[0].Length)) return;
+
+        //    if (BreakExecution) return;
+
+
+
+
+            
+
+        //    if (mat[i][j] == 0)
+        //    {
+
+        //        BreakExecution = true;
+        //        return;
+        //    }
+
+        //    Distance++;
+
+
+
+        //    Solve(mat, i + 1, j, Distance);
+        //    Solve(mat, i, j + 1, Distance);
+        //    Solve(mat, i - 1, j, Distance);
+        //    Solve(mat, i, j - 1, Distance);
+
+
+
+
+        //}
+
+        public TreeNode MergeTrees(TreeNode root1, TreeNode root2)
+        {
+
+            if (root1 == null)
+            {
+                root1 = root2;
+            }
+            else if (root2 != null)
+            {
+                if (root1.left == null)
+                {
+                    root1.left = root2.left;
+                }
+                else if (root2.left != null)
+                {
+                    MergeTrees(root1.left, root2.left);
+                }
+                root1.val += root2.val;
+
+                if (root1.right == null)
+                {
+                    root1.right = root2.right;
+                }
+                else if (root2.right != null)
+                {
+                    MergeTrees(root1.right, root2.right);
+
+                }
+
+
+            }
+            return root1;
+        }
+
+
         static void Main(string[] args)
         {
+
+            int[][] jagged_arr23 =
+{
+    new int[] {0, 0, 0},
+    new int[] {0, 1, 0},
+    new int[] {1, 1, 1},
+   
+};
+            UpdateMatrix(jagged_arr23);
+            
+
+
+           // int[] num154 = new int[7] { 1,2,3,4,5,6,7 };
+           // Rotate(num154, 3);
 
 
 
@@ -1378,7 +1697,62 @@ namespace TestConsoleApp
             return lst;
         }
 
- 
+
+        public IList<IList<int>> LevelOrder(TreeNode root)
+        {
+            IList<IList<int>> result = new List<IList<int>>();
+
+            if (root == null) return result;
+
+            int Level = 0;
+
+            var q = new Queue<TreeNode>();
+
+
+            q.Enqueue(root);
+
+            while (q.Count > 0)
+            {
+
+
+                result.Add(new List<int>());
+
+
+
+                int size = q.Count;
+
+                for (int i = 0; i < size; i++)
+                {
+
+                    var node = q.Dequeue();
+                    result[Level].Add(node.val);
+
+
+
+                    if (node.left != null)
+                    {
+                        q.Enqueue(node.left);
+                    }
+
+                    if (node.right != null)
+                    {
+                        q.Enqueue(node.right);
+                    }
+                }
+
+                Level++;
+
+
+
+            }
+
+            return result;
+
+
+
+
+        }
+
         public static IList<int> PostorderTraversal(TreeNode root)
         {
 
