@@ -26,6 +26,324 @@ namespace TestConsoleApp
     }
 
 
+
+
+    public class Program6
+    {
+        // This is an input class. Do not edit.
+        public class LinkedList
+        {
+            public int value;
+            public LinkedList next;
+
+            public LinkedList(int value)
+            {
+                this.value = value;
+                this.next = null;
+            }
+        }
+
+        public LinkedList RemoveDuplicatesFromLinkedList(LinkedList linkedList)
+        {
+            // Write your code here.
+
+            LinkedList head = linkedList;
+
+
+            while (linkedList.next != null)
+            {
+                while (linkedList.value == linkedList.next.value)
+                {
+                    if (linkedList.next.next != null)
+                        linkedList.next = linkedList.next.next;
+                    else
+                    {
+                        linkedList.next = null;
+                        break;
+                    }
+                }
+
+                if (linkedList.next == null) break;
+
+                linkedList = linkedList.next;
+
+
+
+
+            }
+
+
+
+            return head;
+        }
+
+
+        public class Program3
+    {
+
+        public static int nodeDepths = 0;
+
+        public static int NodeDepths(BinaryTree root)
+        {
+            // Write your code here.
+            nodeDepths = 0;
+            CalculateNodeDepths(root, -1);
+            return nodeDepths;
+        }
+
+        public static void CalculateNodeDepths(BinaryTree root, int nodeDepth)
+        {
+            // Write your code here.
+            if (root == null) return;
+
+
+
+            nodeDepth++;
+            nodeDepths = nodeDepths + nodeDepth;
+            CalculateNodeDepths(root.left, nodeDepth);
+            CalculateNodeDepths(root.right, nodeDepth);
+        }
+
+        public class BinaryTree
+        {
+            public int value;
+            public BinaryTree left;
+            public BinaryTree right;
+
+            public BinaryTree(int value)
+            {
+                this.value = value;
+                left = null;
+                right = null;
+            }
+        }
+    }
+
+    public class Program2
+    {
+        // This is the class of the input root. Do not edit it.
+        public class BinaryTree
+        {
+            public int value;
+            public BinaryTree left;
+            public BinaryTree right;
+
+            public BinaryTree(int value)
+            {
+                this.value = value;
+                this.left = null;
+                this.right = null;
+            }
+        }
+
+        public static List<int> lst = new List<int>();
+
+
+        public static void BranchSums(BinaryTree root, int pathSum)
+        {
+            if (root == null) return;
+
+            pathSum = pathSum + root.value;
+            if ((root.left == null) && (root.right == null))
+            {
+
+                lst.Add(pathSum);
+                return;
+            }
+
+            BranchSums(root.left, pathSum);
+            BranchSums(root.right, pathSum);
+        }
+
+        public static List<int> BranchSums(BinaryTree root)
+        {
+            // Write your code here.
+            lst.Clear();
+            BranchSums(root, 0);
+            return lst;
+        }
+    }
+
+    public class Program1
+    {
+        public static int difference = 0;
+        public static int mindifferencesofar = 100000000;
+        public static int closestsofar = 0;
+
+        public static void Solve(BST tree, int target)
+        {
+            if (tree == null) return;
+
+
+            if (tree.value == target)
+            {
+                closestsofar = tree.value;
+            }
+            else if (target > tree.value)
+            {
+                difference = target - tree.value;
+
+                if (difference < mindifferencesofar)
+                {
+                    mindifferencesofar = difference;
+                    closestsofar = tree.value;
+                }
+                Solve(tree.right, target);
+            }
+            else
+            {
+
+                difference = tree.value - target;
+
+                if (difference < mindifferencesofar)
+                {
+                    mindifferencesofar = difference;
+                    closestsofar = tree.value;
+                }
+
+                Solve(tree.left, target);
+
+
+            }
+
+
+
+        }
+
+
+        public static int FindClosestValueInBst(BST tree, int target)
+        {
+            // Write your code here.
+            Solve(tree, target);
+            return closestsofar;
+        }
+
+        public class BST
+        {
+            public int value;
+            public BST left;
+            public BST right;
+
+            public BST(int value)
+            {
+                this.value = value;
+            }
+        }
+    }
+
+
+
+    public class LRUCache
+    {
+
+        private DoubleLinkedList _list = new DoubleLinkedList();
+        private Hashtable _hashtable = new Hashtable();
+        private int size;
+        public LRUCache(int capacity)
+        {
+            size = capacity;
+        }
+
+        public int Get(int key)
+        {
+            if (_hashtable.ContainsKey(key))
+            {
+                KeyValuePair<int, DoubleLinkedListNode> valuePair = (KeyValuePair<int, DoubleLinkedListNode>)_hashtable[key];
+                _list.MoveNodeToFirst(valuePair.Value);
+
+                return valuePair.Key;
+            }
+
+            return -1;
+        }
+
+        public void Put(int key, int value)
+        {
+            if (_hashtable.ContainsKey(key))
+            {
+                KeyValuePair<int, DoubleLinkedListNode> valuePair = (KeyValuePair<int, DoubleLinkedListNode>)_hashtable[key];
+                _list.MoveNodeToFirst(valuePair.Value);
+                _hashtable[key] = new KeyValuePair<int, DoubleLinkedListNode>(value, _list.GetFirst());
+            }
+            else
+            {
+                _list.AddFirst(key);
+                _hashtable.Add(key, new KeyValuePair<int, DoubleLinkedListNode>(value, _list.GetFirst()));
+                ControlSize();
+            }
+        }
+
+        private void ControlSize()
+        {
+            if (_list.Count > size)
+            {
+                _hashtable.Remove(_list.GetLast().Value);
+                _list.RemoveLast();
+            }
+        }
+
+        class DoubleLinkedList
+        {
+            private DoubleLinkedListNode _dummyFirst = new DoubleLinkedListNode(-1);
+            private DoubleLinkedListNode _dummyLast = new DoubleLinkedListNode(-1);
+            public DoubleLinkedListNode GetFirst() => _dummyFirst.Next;
+            public DoubleLinkedListNode GetLast() => _dummyLast.Prev;
+            public int Count { get; private set; }
+
+            public DoubleLinkedList()
+            {
+                _dummyFirst.Next = _dummyLast;
+                _dummyLast.Prev = _dummyFirst;
+            }
+
+            public void AddFirst(int value)
+            {
+                DoubleLinkedListNode newNode = new DoubleLinkedListNode(value);
+                newNode.Prev = _dummyFirst;
+                newNode.Next = _dummyFirst.Next;
+                _dummyFirst.Next.Prev = newNode;
+                _dummyFirst.Next = newNode;
+                Count++;
+            }
+
+            public void RemoveLast()
+            {
+                DoubleLinkedListNode last = GetLast();
+                last.Prev.Next = last.Next;
+                _dummyLast.Prev = last.Prev;
+                last.Prev = null;
+                last.Next = null;
+                Count--;
+            }
+
+            public void MoveNodeToFirst(DoubleLinkedListNode node)
+            {
+                node.Prev.Next = node.Next;
+                node.Next.Prev = node.Prev;
+                node.Next = _dummyFirst.Next;
+                node.Prev = _dummyFirst;
+                _dummyFirst.Next.Prev = node;
+                _dummyFirst.Next = node;
+            }
+
+        }
+
+
+
+
+        class DoubleLinkedListNode
+        {
+            public DoubleLinkedListNode(int value)
+            {
+                Value = value;
+            }
+            public DoubleLinkedListNode Next { get; set; }
+            public DoubleLinkedListNode Prev { get; set; }
+            public int Value { get; }
+        }
+    }
+
+
     public class KthLargest
     {
 
@@ -513,6 +831,38 @@ namespace TestConsoleApp
                 }
             }
             return ar;
+        }
+
+        public static int MajorityElement(int[] nums)
+        {
+            var dict = new Dictionary<int, int>();
+
+            for (int i = 0; i < nums.Length; i++)
+            {
+                if (dict.ContainsKey(nums[i]))
+                {
+                    dict[nums[i]] = dict[nums[i]] + 1;
+
+                }
+                else
+                {
+                    dict.Add(nums[i], 1);
+
+                }
+
+            }
+
+            foreach (var pair in dict)
+            {
+                if (pair.Value > nums.Length / 2)
+                {
+                    return pair.Key;
+                }
+
+            }
+
+            return 0;
+
         }
 
 
@@ -1063,7 +1413,7 @@ namespace TestConsoleApp
                 for (int j = 0; j < mat[i].Length; j++)
                 {
                     if (mat[i][j] == 0) continue;
-                    Solve(mat, i, j, out Distance);
+                    //Solve(mat, i, j, out Distance);
                     mat[i][j] = Distance;
                     Distance = 0;
                     BreakExecution = false;
@@ -1140,9 +1490,386 @@ namespace TestConsoleApp
             return root1;
         }
 
-
-        static void Main(string[] args)
+        public int NumIslands(char[][] grid)
         {
+
+            int result = 0;
+
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    if (grid[i][j] == '1')
+                    {
+                        CountIsland(grid, i, j);
+                        result++;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public void CountIsland(char[][] grid, int i, int j)
+        {
+            if ((i < 0) || (j < 0) || (i >= grid.Length) || (j >= grid[0].Length)) return;
+
+
+            if (grid[i][j] == '0') return;
+
+            grid[i][j] = '0';
+
+            CountIsland(grid, i + 1, j);
+            CountIsland(grid, i, j + 1);
+            CountIsland(grid, i - 1, j);
+            CountIsland(grid, i, j - 1);
+
+        }
+
+
+        public static int MaxProfitToaste(int[] prices)
+        {
+
+            int maxProfit = 0;
+
+            if (prices.Length > 5)
+            {
+                int buy = 0;
+                int sell = 4;
+                int minsofar = 1000000000;
+
+                while (sell < prices.Length)
+                {
+                    minsofar = Math.Min(prices[buy], minsofar);
+                    maxProfit = Math.Max(maxProfit, prices[sell] - minsofar);
+                    sell++;
+                    buy++;
+                }
+
+            }
+            else
+            {
+                return 0;
+            }
+
+            return maxProfit;
+        }
+
+        public static int[] TwoNumberSum(int[] array, int targetSum)
+        {
+            // Write your code here.
+            var dict = new Dictionary<int, int>();
+            int[] arr = new int[2];
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (!dict.ContainsKey(array[i]))
+                {
+                    dict.Add(array[i], array[i]);
+                }
+            }
+
+            for (int j = 0; j < array.Length; j++)
+            {
+                dict.Remove(array[j]);
+
+                if (dict.ContainsKey(targetSum - array[j]))
+                {
+                    arr[0] = array[j];
+                    arr[1] = targetSum - array[j];
+                    return arr;
+                }
+
+                dict.Add(array[j], array[j]);
+
+            }
+
+            return new int[0];
+        }
+
+        public static int MaxArea(int[] height)
+        {
+            int firstPointer = 0;
+            int secondPointer = height.Length - 1;
+            int MaxArea = 0;
+            int currentArea = 0;
+
+
+            while (firstPointer < secondPointer)
+            {
+                currentArea = (secondPointer - firstPointer) * (Math.Min(height[firstPointer], height[secondPointer]));
+
+                MaxArea = Math.Max(MaxArea, currentArea);
+
+                if (height[secondPointer] > height[firstPointer])
+                {
+                    firstPointer++;
+                }
+                else
+                {
+                    secondPointer--;
+                }
+            }
+
+            return MaxArea;
+        }
+
+        public static int[] TwoNumberSum1(int[] array, int targetSum)
+        {
+            // Write your code here.
+            var dict = new Dictionary<int, int>();
+            int[] arr = new int[2];
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (!dict.ContainsKey(array[i]))
+                {
+                    dict.Add(array[i], array[i]);
+                }
+            }
+
+            for (int j = 0; j < array.Length; j++)
+            {
+                dict.Remove(array[j]);
+
+                if (dict.ContainsKey(targetSum - array[j]))
+                {
+                    arr[0] = array[j];
+                    arr[1] = targetSum - array[j];
+                    return arr;
+                }
+
+                dict.Add(array[j], array[j]);
+
+            }
+
+            return new int[0];
+        }
+
+        public static bool CanPlaceFlowers(int[] flowerbed, int n)
+        {
+
+            int count = 0;
+            if (flowerbed.Length == 1)
+            {
+                if (flowerbed[0] == 0)
+                {
+                    count++;
+                }
+                return count >= n;
+            }
+
+            for (int i = 0; i < flowerbed.Length; i++)
+            {
+                if (flowerbed[i] == 0)
+                {
+                    if (i == 0 && (i + 1) != flowerbed.Length)
+                    {
+                        if (flowerbed[i + 1] != 1)
+                        {
+                            flowerbed[i] = 1;
+                            count++;
+                        }
+                    }
+                    if (i > 0 && (i + 1) < flowerbed.Length)
+                    {
+                        if (flowerbed[i - 1] != 1 && flowerbed[i + 1] != 1)
+                        {
+                            flowerbed[i] = 1;
+                            count++;
+                        }
+                    }
+                    if (i == flowerbed.Length - 1)
+                    {
+                        if (flowerbed[i - 1] != 1)
+                        {
+                            flowerbed[i] = 1;
+                            count++;
+                        }
+                    }
+                }
+
+            }
+
+            return count >= n;
+
+
+        }
+
+
+        public bool GenerateDocument(string characters, string document)
+        {
+            // Write your code here.
+
+            var dictChars = new Dictionary<string. int>();
+            var dictDocs = new Dictionary<string. int>();
+
+
+            for (int i = 0; i < characters.Length; i++)
+            {
+                if (dictChars.ContainsKey(characters[i]))
+                {
+                    dictChars[characters[i]] = dictChars[characters[i]] + 1;
+                }
+                else
+                {
+                    dictChars.Add(chracters[i], 1);
+                }
+            }
+
+            for (int j = 0; j < document.Length; j++)
+            {
+                if (dictDocs.ContainsKey(document[j]))
+                {
+                    dictDocs[document[j]] = dictDocs[document[j]] + 1;
+                }
+                else
+                {
+                    dictDocs.Add(document[j], 1);
+                }
+            }
+
+            int charCount = 0;
+            int docsCount = 0;
+
+            for (int k = 0; k < document.Length; k++)
+            {
+                if (dictChars.ContainsKey(document[k]))
+                {
+                    dictChars.TrGetValue(document[k], out charCount);
+                    dictDocs.TrGetValue(document[k], out docsCount);
+                    if (charCount < docsCount)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
+
+
+
+
+            return true;
+        }
+
+            public static int BinarySearch(int[] array, int target)
+            {
+                // Write your code here.
+
+                return BinarySearch(array, target, 0, array.Length - 1);
+            }
+
+            public static int BinarySearch(int[] array, int target, int left, int right)
+            {
+                if (left > right) return -1;
+
+                int middle = (left + right) / 2;
+                int potentialMatch = array[middle];
+
+                if (target == potentialMatch)
+                    return middle;
+                else if (target < potentialMatch)
+                    return BinarySearch(array, target, left, middle - 1);
+                else
+                    return BinarySearch(array, target, middle + 1, right);
+
+
+            }
+
+
+            public string RunLengthEncoding(string str)
+            {
+                // Write your code here.
+                StringBuilder result = new StringBuilder();
+                int currentCount = 0;
+                string currentLetter = "";
+
+                int i = 0;
+
+                if (str.Length == 1)
+                {
+                    return "1" + str[0].ToString();
+                }
+
+
+
+                while (i < str.Length - 1)
+                {
+
+                    currentCount = 1;
+                    currentLetter = str[i].ToString();
+                    while (str[i] == str[i + 1])
+                    {
+
+                        currentCount++;
+                        i++;
+
+                        if (i == str.Length - 1)
+                        {
+                            break;
+                        }
+
+                        if (currentCount == 9)
+                        {
+                            break;
+                        }
+
+                    }
+
+                    result.Append(currentCount.ToString() + currentLetter.ToString());
+
+
+                    if ((i == str.Length - 2) && ((str[i] != str[i + 1]) || (currentCount == 9)))
+                    {
+
+                        result.Append("1" + str[i + 1].ToString());
+
+                    }
+
+                    i++;
+
+                }
+
+                return result.ToString();
+            }
+
+            public static string CaesarCypherEncryptor(string str, int key)
+            {
+                // Write your code here.
+                string alphabets = "abcdefghijklmnopqrstuvwxyz";
+                int index = 0;
+                StringBuilder result = new StringBuilder();
+
+                for (int i = 0; i < str.Length; i++)
+                {
+                    index = str[i] - 'a';
+
+                    index = index + key;
+
+                    if (index > 25)
+                    {
+                        index = index % 26;
+                    }
+
+                    result.Append(alphabets[index]);
+
+                }
+
+                return result.ToString();
+            }
+
+            static void Main(string[] args)
+        {
+
+
+            int toasteresult = 0;
+            int[] intstaticIntArray12456 = new int[13] { 3,2,4,7,8,5,5,5,1,5,5,5,100 };
+
+            toasteresult = MaxProfitToaste(intstaticIntArray12456);
+
+
 
             int[][] jagged_arr23 =
 {
@@ -1494,6 +2221,89 @@ namespace TestConsoleApp
 
             return splitCount;
         }
+
+
+        public int LengthOfLongestSubstring(string s)
+        {
+
+            var prevAppearance = new Dictionary<char, int>();
+            int maxSubstringLength = 0;
+            int prevNonRepeatingSubstringStartIndex = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (prevAppearance.ContainsKey(s[i]))
+                {
+                    prevNonRepeatingSubstringStartIndex =
+                        Math.Max(prevAppearance[s[i]] + 1, prevNonRepeatingSubstringStartIndex);
+                }
+                maxSubstringLength =
+                    Math.Max(maxSubstringLength, i - prevNonRepeatingSubstringStartIndex + 1);
+                prevAppearance[s[i]] = i;
+            }
+
+            return maxSubstringLength;
+        }
+
+        public string  TournamentWinner(List<List<string>> competitions, List<int> results)
+        {
+            // Write your code here.
+            string winner = "";
+            int wincounter = 0;
+         
+
+
+
+            var dict = new Dictionary<string, int>();
+
+
+            for (int i = 0; i < competitions.Count; i++)
+            {
+                var lst = competitions[i];
+
+                if (results[i] == 1)
+                {
+                    winner = lst[0].ToString();
+                }
+                else
+                {
+                    winner = lst[1].ToString();
+                }
+
+                if (dict.ContainsKey(winner))
+                {
+                    var dictvalue = 0;
+                    dict.TryGetValue(winner, out dictvalue);
+
+                    wincounter = dictvalue;
+                    wincounter = wincounter + 1;
+                    dict.Remove(winner);
+                    dict.Add(winner, wincounter);
+                }
+                else
+                {
+                    dict.Add(winner, 1);
+                }
+
+
+
+
+            }
+            KeyValuePair<string, int> max = new KeyValuePair<string, int>();
+
+            foreach (KeyValuePair<string, int> entry in dict)
+            {
+                if (entry.Value > max.Value)
+                {
+
+                    max = entry;
+                }
+
+            }
+
+
+            return max.Key;
+        }
+
         public static int solutionwitdDict(int[] A, string[] D)
         {
             int totalBalace = 0;
@@ -1948,7 +2758,7 @@ namespace TestConsoleApp
             return false;
         }
 
-        public static int MaxProfit(int[] prices)
+        public int MaxProfit(int[] prices)
         {
 
             int maxProfit = 0;
@@ -1982,6 +2792,8 @@ namespace TestConsoleApp
 
             return maxProfit;
         }
+
+  
         public static bool IsAnagram(string s, string t)
         {
             if ((s == "") || (t == ""))
