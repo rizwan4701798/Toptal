@@ -7,6 +7,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace TestConsoleApp
 {
@@ -829,7 +830,7 @@ namespace TestConsoleApp
                 {
                     int result43;
 
-                    if (numberNames.TryGetValue(target - nums[i], out result43))
+                    if (numberNames.get .TryGetValue(target - nums[i], out result43))
                     {
                         if ((result43 > -1) && (result43 != i))
                         {
@@ -849,7 +850,7 @@ namespace TestConsoleApp
 
                 for (int i = 0; i < nums.Length; i++)
                 {
-                    if (dict.ContainsKey(nums[i]))
+                    if (dict .ContainsKey(nums[i]))
                     {
                         dict[nums[i]] = dict[nums[i]] + 1;
 
@@ -1947,41 +1948,297 @@ namespace TestConsoleApp
 
             }
 
-            public static void InvertBinaryTree(BinaryTree tree)
+            //public static void InvertBinaryTree(BinaryTree tree)
+            //{
+            //    // Write your code here.
+            //    if (tree == null) return;
+
+            //    if ((tree.left != null) && (tree.right != null))
+            //    {
+            //        BinaryTree temp = tree.left;
+            //        tree.left = tree.right;
+            //        tree.right = temp;
+            //    }
+
+            //    else if (tree.left == null)
+            //    {
+
+            //        tree.left = tree.right;
+            //        tree.right = null;
+            //    }
+
+            //    else if (tree.right == null)
+            //    {
+
+            //        tree.right = tree.left;
+            //        tree.left = null;
+            //    }
+
+            //    InvertBinaryTree(tree.left);
+            //    InvertBinaryTree(tree.right);
+
+
+
+
+            //}
+
+            public static bool IsSubsequence(string s, string t)
             {
-                // Write your code here.
-                if (tree == null) return;
 
-                if ((tree.left != null) && (tree.right != null))
+                int firstStringPointer = 0;
+
+                if (s.Length == 0) return true;
+                if (t.Length == 0) return false;
+
+                for (int i = 0; i < t.Length; i++)
                 {
-                    BinaryTree temp = tree.left;
-                    tree.left = tree.right;
-                    tree.right = temp;
+                    if (t[i] == s[firstStringPointer])
+                    {
+                        firstStringPointer++;
+                    }
+                    if (firstStringPointer >= s.Length)
+                    {
+                        return true;
+                    }
                 }
 
-                else if (tree.left == null)
-                {
+                return false;
+            }
 
-                    tree.left = tree.right;
-                    tree.right = null;
+            public IList<IList<string>> GroupAnagrams(string[] strs)
+            {
+                if (strs == null || strs.Length == 0)
+                    return null;
+
+                List<IList<string>> result = new List<IList<string>>();
+                List<string> temp = new List<string>();
+                System.Collections.Hashtable dictionary = new System.Collections.Hashtable();
+                int currentIndex = 0;
+
+                if (strs.Length == 1)
+                {
+                    temp.Add(strs[0]);
+
+                    result.Add(temp);
+                }
+                else
+                {
+                    foreach (var item in strs)
+                    {
+                        if (dictionary.Contains(SortString(item)))
+                            result[(int)dictionary[SortString(item)]].Add(item);
+                        else
+                        {
+                            dictionary.Add(SortString(item), currentIndex++);
+
+                            temp = new List<string>();
+                            temp.Add(item);
+
+                            result.Add(temp);
+                        }
+                    }
                 }
 
-                else if (tree.right == null)
-                {
+                return result;
+            }
 
-                    tree.right = tree.left;
-                    tree.left = null;
+            public static string SortString(string input)
+            {
+                return "";
+
+                //char[] characters = input.ToArray();
+                //Array.Sort(characters);
+
+                //return new string(characters);
+            }
+
+            public static int toptal23(string[] T, string[] R)
+            {
+                // write your code in C# 6.0 with .NET 4.7 (Mono 6.12)
+                int totalGroupsCount = 0;
+                int passedGroupCount = 0;
+                int score = 0;
+                var dictTestCases = new Dictionary<string, string>();
+
+                for (int i = 0; i < T.Length; i++)
+                {
+                    if (!dictTestCases.ContainsKey(T[i]))
+                    {
+                        dictTestCases.Add(T[i], R[i]);
+                    }
                 }
 
-                InvertBinaryTree(tree.left);
-                InvertBinaryTree(tree.right);
+                for (int j = 0; j < T.Length; j++)
+                {
+                    if (dictTestCases.ContainsKey(T[j]))
+                    {
+
+                        bool isTestPassed = true;
 
 
+                        if (dictTestCases[T[j]] != "OK")
+                        {
+                            isTestPassed = false;
+                        }
+
+                       
+
+                        dictTestCases.Remove(T[j]);
+                        if (Char.IsLetter(T[j][T[j].Length - 1]))
+                        {
+                            T[j] = T[j].Remove(T[j].Length - 1);
+                        }
+
+                        for (char c = 'a'; c <= 'z'; c++)
+                        {
+                            if (dictTestCases.ContainsKey(T[j] + c))
+                            {
+
+                                if (dictTestCases[T[j] + c] != "OK")
+                                {
+                                    isTestPassed = false;
+                                }
+
+                                dictTestCases.Remove(T[j]+c);
+                            }
+
+
+
+                        }
+
+                        if (isTestPassed) passedGroupCount++;
+
+                        totalGroupsCount++;
+                    }
+
+                    
+
+                }
+
+                score = Math.Abs((passedGroupCount * 100) / totalGroupsCount);
+
+                return score;
 
 
             }
+
+            public int[] ProductExceptSelf(int[] nums)
+            {
+                int[] ret = new int[nums.Length];
+                ret[0] = 1;
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    ret[i] = ret[i - 1] * nums[i - 1];
+                }
+                int right = 1;
+                for (int i = nums.Length - 1; i >= 0; i--)
+                {
+                    ret[i] = ret[i] * right;
+                    right *= nums[i];
+                }
+                return ret;
+            }
+
+            public static int MaxProduct(int[] nums)
+            {
+                var n = nums.Length;
+
+                if (n == 0) return 0;
+                if (n == 1) return nums[0];
+
+                var minArr = new int[n];
+                var maxArr = new int[n];
+
+                minArr[0] = nums[0];
+                maxArr[0] = nums[0];
+
+                for (int i = 1; i < n; i++)
+                {
+                    maxArr[i] = Math.Max(Math.Max(maxArr[i - 1] * nums[i], minArr[i - 1] * nums[i]), nums[i]);
+                    minArr[i] = Math.Min(Math.Min(minArr[i - 1] * nums[i], maxArr[i - 1] * nums[i]), nums[i]);
+                }
+
+                return maxArr.Max();
+            }
+
+            public int SearchRotatedArray(int[] nums, int target)
+            {
+                var n = nums.Length;
+
+                var left = 0;
+                var right = n - 1;
+
+                while (left <= right)
+                {
+                    var mid = left + (right - left) / 2;
+                    if (nums[mid] == target)
+                    {
+                        return mid;
+                    }
+                    else if (nums[left] <= nums[mid])
+                    {
+                        // NOTE: left might equal to mid [3,1], single number matches the rule, so need nums[left] <= nums[mid]
+                        // increasing on the left
+                        if (nums[left] <= target && target <= nums[mid])
+                        {
+                            right = mid - 1;
+                        }
+                        else
+                        {
+                            left = mid + 1;
+                        }
+                    }
+                    else
+                    {
+                        // increasing on the right
+                        if (nums[mid] <= target && target <= nums[right])
+                        {
+                            left = mid + 1;
+                        }
+                        else
+                        {
+                            right = mid - 1;
+                        }
+                    }
+                }
+
+                return -1;
+            }
+
+            public static int FindMin(int[] nums)
+            {
+                var n = nums.Length;
+
+                var left = 0;
+                var right = n - 1;
+
+                var globalMin = int.MaxValue;
+
+                while (left <= right)
+                {
+                    var mid = left + (right - left) / 2;
+                    if (nums[mid] < nums[right])
+                    {
+                        globalMin = Math.Min(globalMin, nums[mid]);
+                        right = mid - 1;
+                    }
+                    else
+                    {
+                        globalMin = Math.Min(globalMin, nums[left]);
+                        left = mid + 1;
+                    }
+                }
+
+                return globalMin;
+            }
+
             static void Main(string[] args)
             {
+
+
+                string[] T = new string[5] { "codility1", "codility3", "codility2", "codility4b", "codility4a" };
+                string[] R = new string[5] { "Wrong answer", "OK", "OK", "Time limit exceeded", "OK" };
+                int istry76 =   toptal23( T,  R);
 
 
                 string strggg = "bujrnytmoufnkgvpvjuvucjfzgyiankznkvquqduyzsehkoatikwckxpdgudcsxgqqtqlqmhkwsklsnabgzbxwmnovosjhfyjqlrtgvqmfpzytfsriugbfdarcbpzihtxvbzropxxdzrdgeyovsjpbuobetmrtgylypddnnmrpsucxwtpoegxpxvjyjjhqylnngzkjmjrksnnuaumvrniqrihulasoiqnkwcwmhhrghgbqizijqofavgpguzgqpaouezkbiirkqbebxhwqacnqdhtccpbwslarwokpqfvicdcflekunuqymjhjjpystvthjneesizkpziffyuoqpnjgkcjgunflxpnhbzcuuyiucctdpmtnrchmrramiapfwugkhbljsyjifuoaehacivmeqevsjcdelevkwuletdzyojqpfzfpiwrinsoxfhqbwysaiqccsyfnduhrguuwysquvebtgaqpuiopijcfqnfnsvwlmqznsndaoarsqqhegexnpmzvugsxwdoduelhpdektspfuhnylmyfgsxmoedwvzvlvvlsmfigcqllzpexrpkhykyiqbshifycdhnjxiprezjnsuemqpykbxcovphaedipawxhkszkfirwhdiujzkemipzpehmbrvxbyzepqowsmdrlthiegamtfnidunjzlgqnfumyhvsxkfeqggwujvhwjvwkwbkhgldjhuwzdpxhpydxepgwkkmfmdbarmpwwxsscxvtzxdhhzdfboncipfnnjughfrnfnnwcvejshlpvxpoqnmftgrolxqdongudajqatzzqswpgypgwwxgofeibnmcnfouuopqpowhlipgtwvpjpwecvlacyvmqpejotcjvncnpieinglxcsgixadnoyxpdkougzegwaxpwyzcvnbfbgfzgzqmtumltovtbdjnaciaknqjpawhwtdxmbaxzjcmrysxdkiqosjtmfyxajzwfgmdpmumoakz";
@@ -2180,31 +2437,31 @@ namespace TestConsoleApp
                 return nums;
             }
 
-            public static void MainMerge(int[] numbers, int left, int mid, int right)
-            {
-                int[] temp = new int[numbers.Length];
-                int i, eol, num, pos;
-                eol = (mid - 1);
-                pos = left;
-                num = (right - left + 1);
+            //public static void MainMerge(int[] numbers, int left, int mid, int right)
+            //{
+            //    int[] temp = new int[numbers.Length];
+            //    int i, eol, num, pos;
+            //    eol = (mid - 1);
+            //    pos = left;
+            //    num = (right - left + 1);
 
-                while ((left <= eol) && (mid <= right))
-                {
-                    if (numbers[left] <= numbers[mid])
-                        temp[pos++] = numbers[left++];
-                    else
-                        temp[pos++] = numbers[mid++];
-                }
-                while (left <= eol)
-                    temp[pos++] = numbers[left++];
-                while (mid <= right)
-                    temp[pos++] = numbers[mid++];
-                for (i = 0; i < num; i++)
-                {
-                    numbers[right] = temp[right];
-                    right--;
-                }
-            }
+            //    while ((left <= eol) && (mid <= right))
+            //    {
+            //        if (numbers[left] <= numbers[mid])
+            //            temp[pos++] = numbers[left++];
+            //        else
+            //            temp[pos++] = numbers[mid++];
+            //    }
+            //    while (left <= eolmain
+            //        temp[pos++] = numbers[left++];
+            //    while (mid <= right)
+            //        temp[pos++] = numbers[mid++];
+            //    for (i = 0; i < num; i++)
+            //    {
+            //        numbers[right] = temp[right];
+            //        right--;
+            //    }
+            //}
 
             bool solve(TreeNode root, long left, long right)
             {
@@ -2233,7 +2490,7 @@ namespace TestConsoleApp
                     mid = (right + left) / 2;
                     SortMerge(numbers, left, mid);
                     SortMerge(numbers, (mid + 1), right);
-                    MainMerge(numbers, left, (mid + 1), right);
+                  //  MainMerge(numbers, left, (mid + 1), right);
                 }
             }
 
@@ -2400,6 +2657,7 @@ namespace TestConsoleApp
                     {
                         var dictvalue = 0;
                         dict.TryGetValue(winner, out dictvalue);
+                        
 
                         wincounter = dictvalue;
                         wincounter = wincounter + 1;
