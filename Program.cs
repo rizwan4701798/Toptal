@@ -26,6 +26,59 @@ namespace TestConsoleApp
         Pink = 128,
     }
 
+    public class TreeNode
+    {
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
+        public TreeNode(int val = 0, TreeNode left = null, TreeNode right = null)
+        {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    public class Solution
+    {
+
+        public bool AreEqual(TreeNode s, TreeNode t)
+        {
+            if (s == null || t == null) return s == t;
+            return s.val == t.val && AreEqual(s.left, t.left) && AreEqual(s.right, t.right);
+        }
+
+        public bool IsSubtree(TreeNode s, TreeNode t)
+        {
+            if (s == null || t == null) return s == t;
+            return AreEqual(s, t) || IsSubtree(s.left, t) || IsSubtree(s.right, t);
+        }
+
+
+        int globalSum = int.MinValue;
+        public int MaxPathSum(TreeNode root)
+        {
+            DFS(root);
+            return globalSum;
+        }
+
+        private int DFS(TreeNode root)
+        {
+            if (root == null) return 0;
+
+            var leftSum = DFS(root.left);
+            var rightSum = DFS(root.right);
+
+            var localSum = root.val;
+            localSum += Math.Max(0, leftSum);
+            localSum += Math.Max(0, rightSum);
+
+            globalSum = Math.Max(localSum, globalSum);
+
+            return Math.Max(root.val, Math.Max(root.val + leftSum, root.val + rightSum));
+        }
+    }
+
     public class LinkedList
     {
         public int Value;
@@ -830,7 +883,7 @@ namespace TestConsoleApp
                 {
                     int result43;
 
-                    if (numberNames.get .TryGetValue(target - nums[i], out result43))
+                    if (numberNames.TryGetValue(target - nums[i], out result43))
                     {
                         if ((result43 > -1) && (result43 != i))
                         {
@@ -2232,6 +2285,924 @@ namespace TestConsoleApp
                 return globalMin;
             }
 
+            public static int GetSumBinary(int a, int b)
+            {
+                if (b == 0) return a;
+
+                var noCarry = a ^ b;
+                var carry = a & b;
+
+                return GetSumBinary(noCarry, carry << 1);
+            }
+
+            public static int MissingNumber(int[] nums)
+            {
+                for (int i = 0; i <= nums.Length; i++)
+                {
+                    if (nums.Contains(i) == false)
+                        return i;
+                }
+                return -1;
+            }
+
+            public int LengthOfLIS(int[] nums)
+            {
+                int len = nums.Length;
+                if (len < 2) return len;
+                int[] dp = new int[len];
+                int count = 0;
+
+                for (int i = 0; i < len; i++)
+                {
+                    int idx = Array.BinarySearch(dp, 0, count, nums[i]);
+                    if (idx < 0) idx = ~idx;
+                    dp[idx] = nums[i];
+                    if (idx == count) count++;
+                }
+
+                return count;
+            }
+
+            public int LongestCommonSubsequence(string text1, string text2)
+            {
+                //     d l l e d 
+                //  f  0 0 0 0 0          
+                //  l  0 1 1 1 1   
+                //  d  1 1 1 1 2    
+                int n = text1.Length;
+                int m = text2.Length;
+                int[][] dp = new int[n + 1][];
+
+                for (int i = 0; i <= n; ++i)
+                {
+                    dp[i] = new int[m + 1];
+                }
+
+                for (int i = 1; i <= n; ++i)
+                {
+                    for (int j = 1; j <= m; ++j)
+                    {
+                        if (text1[i - 1] == text2[j - 1])
+                        {
+                            dp[i][j] = dp[i - 1][j - 1] + 1;
+                        }
+                        dp[i][j] = Math.Max(dp[i][j], Math.Max(dp[i - 1][j], dp[i][j - 1]));
+                    }
+
+                }
+
+                return dp[n][m];
+            }
+
+            public IList<IList<int>> CombinationSum(int[] candidates, int target)
+            {
+                var result = new List<IList<int>>();
+                if (candidates.Length == 0) return result;
+                Array.Sort(candidates);
+                DFS(candidates, target, 0, new List<int>(), result);
+                return result;
+            }
+
+            public int NumDecodings(string s)
+            {
+                if (s == null || s.Length == 0 || s[0] == '0')
+                    return 0;
+
+                int n = s.Length;
+                int[] dp = new int[n + 1];
+
+                dp[0] = 1;
+                dp[1] = 1;
+
+                for (int i = 2; i <= n; i++)
+                {
+                    int num1 = int.Parse(s.Substring(i - 1, 1));
+                    int num2 = int.Parse(s.Substring(i - 2, 2));
+                    int c1 = num1 > 0 ? dp[i - 1] : 0;
+                    int c2 = num2 >= 10 && num2 <= 26 ? dp[i - 2] : 0;
+                    dp[i] = c1 + c2;
+                }
+
+                return dp[n];
+            }
+
+            public bool CanJump(int[] nums)
+            {
+                int farthest = nums[0];
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (i > farthest)
+                        return false;
+
+                    farthest = Math.Max(farthest, i + nums[i]);
+                    if (farthest > nums.Length)
+                        return true;
+                }
+
+                return true;
+            }
+
+            public bool CanFinish(int n, int[][] prerequisites)
+            {
+                var graph = new Dictionary<int, HashSet<int>>();
+                for (int i = 0; i < n; i++)
+                    graph[i] = new HashSet<int>();
+
+                int[] inDegree = new int[n];
+                foreach (var p in prerequisites)
+                {
+                    int u = p[0], v = p[1];
+                    graph[v].Add(u);
+                    inDegree[u]++;
+                }
+
+                for (int i = 0; i < n; i++)
+                {
+                    int curr = FindCourseToTake(graph, inDegree);
+                    if (curr < 0)
+                        break;
+                    if (graph[curr] != null)
+                    {
+                        foreach (var next in graph[curr])
+                            inDegree[next]--;
+                        graph[curr] = null;
+                    }
+                }
+
+                return inDegree.Sum() == 0;
+            }
+
+
+            public IList<IList<int>> PacificAtlantic1(int[][] matrix)
+            {
+
+                List<IList<int>> res = new List<IList<int>>();
+                if (matrix == null || matrix.Length == 0)
+                    return res;
+
+                int m = matrix.Length, n = matrix[0].Length;
+                bool[,] pacific = new bool[m, n];
+                bool[,] atlantic = new bool[m, n];
+
+                for (int row = 0; row < m; row++)
+                {
+                    DFS1(row, 0, matrix, pacific, matrix[row][0]);
+                    DFS1(row, n - 1, matrix, atlantic, matrix[row][n - 1]);
+                }
+
+                for (int col = 0; col < n; col++)
+                {
+                    DFS1(0, col, matrix, pacific, matrix[0][col]);
+                    DFS1(m - 1, col, matrix, atlantic, matrix[m - 1][col]);
+                }
+
+                for (int i = 0; i < m; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        if (pacific[i, j] && atlantic[i, j])
+                            res.Add(new List<int>() { i, j });
+                    }
+                }
+
+                return res;
+            }
+
+            private void DFS1(int row, int col, int[][] matrix, bool[,] reach, int prev)
+            {
+                int m = matrix.Length, n = matrix[0].Length;
+
+                if (row < 0 || row >= m || col < 0 || col >= n || reach[row, col] || matrix[row][col] < prev)
+                    return;
+
+                reach[row, col] = true;
+                DFS1(row, col + 1, matrix, reach, matrix[row][col]);
+                DFS1(row, col - 1, matrix, reach, matrix[row][col]);
+                DFS1(row + 1, col, matrix, reach, matrix[row][col]);
+                DFS1(row - 1, col, matrix, reach, matrix[row][col]);
+            }
+
+            public int[][] Insert(int[][] intervals, int[] newInterval)
+            {
+                List<int[]> result = new List<int[]>();
+                int i = 0;
+
+                // Step 1 - add all intervals ending before newInterval starts
+                while (i < intervals.Length && intervals[i][1] < newInterval[0])
+                    result.Add(intervals[i++]);
+
+                // Step 2 - update the newInterval by merging with all overlapping intervals
+                while (i < intervals.Length && intervals[i][0] <= newInterval[1])
+                {
+                    newInterval[0] = Math.Min(newInterval[0], intervals[i][0]);
+                    newInterval[1] = Math.Max(newInterval[1], intervals[i][1]);
+                    i++;
+                }
+                result.Add(newInterval); // add updated interval
+
+                // Step 3 - add remaining intervals
+                while (i < intervals.Length)
+                    result.Add(intervals[i++]);
+
+                return result.ToArray();
+            }
+
+            public ListNode MergeKLists(ListNode[] lists)
+            {
+                if (lists == null || lists.Length == 0)
+                    return null;
+                if (lists.Length == 1)
+                    return lists[0];
+
+                var dict = new Dictionary<int, List<ListNode>>();
+
+                foreach (var list in lists)
+                {
+                    var cur = list;
+                    while (cur != null)
+                    {
+                        if (dict.ContainsKey(cur.val))
+                            dict[cur.val].Add(cur);
+                        else
+                            dict.Add(cur.val, new List<ListNode>() { cur });
+
+                        cur = cur.next;
+                    }
+                }
+
+             
+
+                var sorted = dict.OrderBy(d => d.Key).ToArray();
+                ListNode head = null, curNode = null;
+                foreach (var nodes in sorted)
+                {
+                    foreach (var node in nodes.Value)
+                    {
+                        if (head == null)
+                        {
+                            head = node;
+                            curNode = head;
+                        }
+                        else
+                        {
+                            curNode.next = node;
+                            curNode = curNode.next;
+                        }
+                    }
+                }
+
+                if (curNode != null)
+                    curNode.next = null;
+
+                return head;
+            }
+
+            public void ReorderList(ListNode head)
+            {
+                if (head == null || head.next == null || head.next.next == null)
+                    return;
+
+                MergeLists(head, ReverseList(FindMiddleNode(head)));
+            }
+
+            private ListNode FindMiddleNode(ListNode head)
+            {
+                ListNode fast = head,
+                         slow = head,
+                         tail = null;
+
+                while (fast != null && fast.next != null)
+                {
+                    fast = fast.next.next;
+                    tail = slow;
+                    slow = slow.next;
+                }
+
+                tail.next = null;
+
+                return slow;
+            }
+
+            public void SetZeroes(int[][] matrix)
+            {
+                var firstRow = 1;
+                var firstCol = 1;
+
+                var n = matrix.Length;
+
+                if (n == 0) return;
+                var m = matrix[0].Length;
+
+                for (int i = 0; i < n; i++)
+                {
+                    if (matrix[i][0] == 0)
+                    {
+                        firstCol = 0;
+                    }
+                }
+
+                for (int j = 0; j < m; j++)
+                {
+                    if (matrix[0][j] == 0)
+                    {
+                        firstRow = 0;
+                    }
+                }
+
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        if (matrix[i][j] == 0)
+                        {
+                            matrix[i][0] = 0;
+                            matrix[0][j] = 0;
+                        }
+                    }
+                }
+
+                // set 0
+
+                for (int j = 1; j < m; j++)
+                {
+                    if (matrix[0][j] == 0)
+                    {
+                        for (int i = 1; i < n; i++)
+                        {
+                            matrix[i][j] = 0;
+                        }
+                    }
+                }
+
+                for (int i = 1; i < n; i++)
+                {
+                    if (matrix[i][0] == 0)
+                    {
+                        for (int j = 1; j < m; j++)
+                        {
+                            matrix[i][j] = 0;
+                        }
+                    }
+                }
+
+                if (firstRow == 0)
+                {
+                    for (int j = 1; j < m; j++)
+                    {
+                        matrix[0][j] = 0;
+                    }
+                }
+
+                if (firstCol == 0)
+                {
+                    for (int i = 1; i < n; i++)
+                    {
+                        matrix[i][0] = 0;
+                    }
+                }
+            }
+
+            private ListNode ReverseList1(ListNode head)
+            {
+                ListNode n1 = head,
+                         n2 = n1.next,
+                         n3 = n2?.next;
+
+                n1.next = null;
+
+                while (n2 != null)
+                {
+                    n2.next = n1;
+
+                    n1 = n2;
+                    n2 = n3;
+
+                    if (n3 != null)
+                        n3 = n3.next;
+                }
+
+                return n1;
+            }
+
+            private void MergeLists(ListNode l1, ListNode l2)
+            {
+                ListNode cur = new ListNode(),
+                         next = l1;
+
+                while (l1 != null && l2 != null)
+                {
+                    cur.next = next;
+                    cur = cur.next;
+
+                    if (next == l1)
+                    {
+                        l1 = l1.next;
+                        next = l2;
+                    }
+                    else if (next == l2)
+                    {
+                        l2 = l2.next;
+                        next = l1;
+                    }
+                }
+
+                if (l1 != null)
+                    cur.next = l1;
+
+                if (l2 != null)
+                    cur.next = l2;
+            }
+
+            public ListNode RemoveNthFromEnd(ListNode head, int n)
+            {
+                if (head == null)
+                    return null;
+
+                ListNode dummyNode = new ListNode(-1),
+                         tempNode1 = dummyNode,
+                         tempNode2 = dummyNode;
+                tempNode1.next = head;
+
+                for (int i = 1; i <= n + 1; i++)
+                    tempNode2 = tempNode2.next;
+
+                while (tempNode2 != null)
+                {
+                    tempNode1 = tempNode1.next;
+                    tempNode2 = tempNode2.next;
+                }
+
+                tempNode1.next = tempNode1.next.next;
+
+                return dummyNode.next;
+            }
+
+            public int LongestConsecutive(int[] nums)
+            {
+                var n = nums.Length;
+                if (n == 0) return 0;
+                var numAndLeftRight = new Dictionary<int, Tuple<int, int>>();
+
+                var global = 1;
+
+                foreach (var num in nums)
+                {
+                    if (numAndLeftRight.ContainsKey(num)) continue;
+
+                    var pre = num - 1;
+                    var next = num + 1;
+
+                    var start = numAndLeftRight.ContainsKey(pre) ? numAndLeftRight[pre].Item1 : num;
+                    var end = numAndLeftRight.ContainsKey(next) ? numAndLeftRight[next].Item2 : num;
+
+                    global = Math.Max(end - start + 1, global);
+
+                    var curRange = Tuple.Create(start, end);
+                    numAndLeftRight[num] = curRange;
+                    numAndLeftRight[start] = curRange;
+                    numAndLeftRight[end] = curRange;
+                }
+
+                return global;
+            }
+
+            private int FindCourseToTake(Dictionary<int, HashSet<int>> graph, int[] inDegree)
+            {
+                for (int i = 0; i < inDegree.Length; i++)
+                    if (inDegree[i] == 0 && graph[i] != null)
+                        return i;
+                return -1;
+            }
+
+            /*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public IList<Node> neighbors;
+
+    public Node() {
+        val = 0;
+        neighbors = new List<Node>();
+    }
+
+    public Node(int _val) {
+        val = _val;
+        neighbors = new List<Node>();
+    }
+
+    public Node(int _val, List<Node> _neighbors) {
+        val = _val;
+        neighbors = _neighbors;
+    }
+}
+*/
+
+            /*
+
+            public Node CloneGraph(Node node)
+            {
+                if (node == null)
+                    return node;
+
+                Queue<Node> queue = new Queue<Node>();
+                Dictionary<Node, Node> visited = new Dictionary<Node, Node>();  // key: node, val: copy
+
+                queue.Enqueue(node);
+                visited.Add(node, new Node(node.val));
+
+                while (queue.Count > 0)
+                {
+                    Node curr = queue.Dequeue();
+                    foreach (var neighbor in curr.neighbors)
+                    {
+                        if (!visited.ContainsKey(neighbor))
+                        {
+                            // deep copy neighbor node
+                            visited.Add(neighbor, new Node(neighbor.val));
+                            queue.Enqueue(neighbor);
+                        }
+
+                        // add neighbor's copy to curr's copy
+                        visited[curr].neighbors.Add(visited[neighbor]);
+                    }
+                }
+
+                return visited[node];
+            }
+
+    */
+
+            public int UniquePaths(int m, int n)
+            {
+                // Matrix to store the value of possible ways to reach each cell
+                int[][] dp = new int[m][];
+
+                // C# thing, as we cannot define int[][] dp = new int[m][n]; 
+                for (int i = 0; i < m; i++)
+                {
+                    dp[i] = new int[n];
+                }
+
+                //Base Conditions 
+                // all first column of every row as 1
+                for (int i = 0; i < dp.Length; i++)
+                    dp[i][0] = 1;
+                // all first row of every column as 1
+                for (int i = 0; i < dp[0].Length; i++)
+                    dp[0][i] = 1;
+
+                for (int i = 1; i < m; i++)
+                {
+                    for (int j = 1; j < n; j++)
+                    {
+                        dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+                    }
+                }
+
+                return dp[m - 1][n - 1];
+            }
+
+            public int Rob1(int[] nums)
+            {
+                var (p2, p) = (0, 0);
+                foreach (var n in nums) (p2, p) = (p, Math.Max(p, p2 + n));
+                return p;
+            }
+
+            public int Rob(int[] nums)
+            {
+                if (nums.Length == 1) return nums[0];
+                var (p2, p) = (0, 0);
+                for (var i = 0; i < nums.Length - 1; i++)
+                {
+                    (p2, p) = (p, Math.Max(p2 + nums[i], p));
+                }
+                var max = p;
+                (p2, p) = (0, 0);
+                for (var i = 1; i < nums.Length; i++)
+                {
+                    (p2, p) = (p, Math.Max(p2 + nums[i], p));
+                }
+                return Math.Max(max, p);
+            }
+
+            private void DFS(int[] candidates, int target, int start, IList<int> oneResult, IList<IList<int>> result)
+            {
+                if (target == 0)
+                {
+                    result.Add(new List<int>(oneResult));
+                }
+                else if (target > 0)
+                {
+                    for (int i = start; i < candidates.Length; i++)
+                    {
+                        oneResult.Add(candidates[i]);
+                        DFS(candidates, target - candidates[i], i, oneResult, result);
+                        oneResult.RemoveAt(oneResult.Count - 1);
+                    }
+                }
+            }
+
+            public bool WordBreak(string s, IList<string> wordDict)
+            {
+                var n = s.Length;
+                var dp = new bool[n + 1];
+
+                dp[0] = true;
+                for (int i = 1; i <= n; i++)
+                {
+                    var sIndex = i - 1;
+                    foreach (var word in wordDict)
+                    {
+                        var wordLen = word.Length;
+                        var lastChar = word.Last();
+
+                        if (lastChar == s[sIndex] && sIndex + 1 >= wordLen)
+                        {
+                            if (s.Substring(sIndex - wordLen + 1, wordLen) == word)
+                            {
+                                dp[i] |= dp[i - wordLen];
+                            }
+                        }
+                    }
+                }
+
+                return dp[n];
+            }
+            public static int CoinChange(int[] coins, int amount)
+            {
+                var n = coins.Length;
+
+                var dp = new int[amount + 1];
+
+                for (int i = 1; i <= amount; i++)
+                {
+                    dp[i] = int.MaxValue;
+                    for (int j = 0; j < n; j++)
+                    {
+                        var pre = i - coins[j];
+                        if (pre >= 0 && dp[pre] != int.MaxValue)
+                        {
+                            dp[i] = Math.Min(dp[i], dp[pre] + 1);
+                        }
+                    }
+                }
+
+                if (dp[amount] == int.MaxValue)
+                {
+                    return -1;
+                }
+
+                return dp[amount];
+            }
+            public static int ClimbStairs(int n)
+            {
+                if (n <= 2)
+                    return n;
+
+                int[] res = new int[n + 1];
+
+                res[1] = 1;
+                res[2] = 2;
+
+                for (int i = 3; i <= n; i++)
+                    res[i] = res[i - 1] + res[i - 2];
+
+                return res[n];
+            }
+
+            public uint reverseBits(uint n)
+            {
+                var power = 31;
+                uint answer = 0;
+                while (n != 0)
+                { // check n > 0 is better than check power >= 0
+                    answer += ((n & 1) << power);
+                    power--;
+                    n >>= 1;
+                }
+                return answer;
+            }
+
+            public IList<IList<int>> ThreeSum(int[] nums)
+            {
+                List<IList<int>> res = new List<IList<int>>();
+                if (nums == null || nums.Length < 3)
+                    return res;
+
+                Array.Sort(nums);
+                for (int i = 0; i < nums.Length - 2; i++)
+                {
+                    // If nums[i] > 0, we can't find a valid triplet, since nums is sorted and nums[i] the smallest number.
+                    // To avoid duplicate triplets, we should skip nums[i] if nums[i] == nums[i-1]
+                    if (nums[i] > 0 || (i > 0 && nums[i] == nums[i - 1]))
+                        continue;
+
+                    int left = i + 1, right = nums.Length - 1;
+                    while (left < right)
+                    {
+                        if (nums[i] + nums[left] + nums[right] == 0)
+                        {
+                            res.Add(new List<int>() { nums[i], nums[left], nums[right] });
+                            left++;
+                            right--;
+
+                            while (left < right && nums[left] == nums[left - 1])
+                                left++;
+                            while (left < right && nums[right] == nums[right + 1])
+                                right--;
+                        }
+                        else if (nums[i] + nums[left] + nums[right] > 0)
+                            right--;
+                        else
+                            left++;
+                    }
+                }
+
+                return res;
+            }
+
+            public static int HammingWeight(uint n)
+            {
+                uint count = 0;
+                for (int i = 0; i < 32; i++)
+                {
+                    count += n & 1;
+                    n >>= 1;
+                }
+                return (int)count;
+            }
+
+            public int[] CountBits(int n)
+            {
+                if (n == 0)
+                    return new int[1] { 0 };
+
+                int[] res = new int[n + 1];
+                res[0] = 0;
+
+                for (int i = 1; i < res.Length; i++)
+                {
+                    res[i] = res[i >> 1] + (i & 1);
+                }
+
+                return res;
+            }
+
+            public bool Exist(char[][] board, string word)
+            {
+
+                if (board == null || board[0].Length == 0)
+                    return false;
+                if (word == "")
+                    return true;
+
+                for (int i = 0; i < board.Length; i++)
+                {
+                    for (int j = 0; j < board[0].Length; j++)
+                    {
+                        if (WordSearch(board, word, i, j, 0))
+                            return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public string LongestPalindrome(string s)
+            {
+                if (s.Length == 1) return s;
+
+                int res = 0;
+                int l = 0;
+                int r = 0;
+                int len = s.Length;
+
+                for (int i = 0; i < len; i++)
+                {
+                    for (int diff = 1; i - diff + 1 >= 0 && i + diff < len; diff++)
+                    {
+                        if (s[i - diff + 1] != s[i + diff]) break;
+                        else if (res < diff * 2)
+                        {
+                            res = diff * 2;
+                            l = i - diff + 1;
+                            r = i + diff;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < len; i++)
+                {
+                    for (int diff = 1; i - diff >= 0 && i + diff < len; diff++)
+                    {
+                        if (s[i - diff] != s[i + diff]) break;
+                        else if (res < diff * 2 + 1)
+                        {
+                            res = diff * 2 + 1;
+                            l = i - diff;
+                            r = i + diff;
+                        }
+                    }
+                }
+
+                return s.Substring(l, r - l + 1);
+            }
+
+            public bool IsSameTree(TreeNode p, TreeNode q)
+            {
+                if (Equals(p, null) || Equals(q, null))
+                    return Equals(q, p);
+                return Equals(p.val, q.val) && IsSameTree(p.left, q.left) && IsSameTree(p.right, q.right);
+            }
+
+            public bool IsPalindrome(string s)
+            {
+                int start = 0;
+                int end = s.Length - 1;
+
+                while (start < end)
+                {
+                    if (!Char.IsLetterOrDigit(s[start]))
+                    {
+                        start++;
+                        continue;
+                    }
+
+                    if (!Char.IsLetterOrDigit(s[end]))
+                    {
+                        end--;
+                        continue;
+                    }
+
+                    if (Char.ToLower(s[start]) != Char.ToLower(s[end]))
+                    {
+                        return false;
+                    }
+
+                    start++;
+                    end--;
+                }
+
+                return true;
+            }
+
+            public int CharacterReplacement(string s, int k)
+            {
+                if (s == null || s.Length == 0)
+                    return 0;
+
+                Dictionary<char, int> dic = new Dictionary<char, int>();
+
+
+                int left = 0, right = 0, cnt = 0, maxCnt = 0, maxlen = 0;
+
+                while (right < s.Length)
+                {
+                    char rightChar = s[right];
+                    if (dic.ContainsKey(rightChar))
+                        dic[rightChar]++;
+                    else
+                        dic.Add(rightChar, 1);
+                    right++;
+
+
+                    maxCnt = Math.Max(maxCnt, dic[rightChar]);
+
+
+                    if (right - left - maxCnt > k)
+                    {
+
+                        char leftChar = s[left];
+                        dic[leftChar]--;
+                        left++;
+                    }
+
+                    maxlen = Math.Max(maxlen, right - left);
+                }
+
+                return maxlen;
+            }
+
+            private bool WordSearch(char[][] board, string word, int i, int j, int idx)
+            {
+                if (idx == word.Length)
+                    return true;
+                if (i < 0 || i >= board.Length || j < 0 || j >= board[0].Length || word[idx] != board[i][j])
+                    return false;
+
+                board[i][j] = '#'; // visted
+
+                bool find = WordSearch(board, word, i - 1, j, idx + 1)
+                    || WordSearch(board, word, i + 1, j, idx + 1)
+                    || WordSearch(board, word, i, j - 1, idx + 1)
+                    || WordSearch(board, word, i, j + 1, idx + 1);
+
+                board[i][j] = word[idx]; // backtracking
+
+                return find;
+            }
             static void Main(string[] args)
             {
 
